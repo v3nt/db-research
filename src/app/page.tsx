@@ -1,24 +1,42 @@
 "use client";
 
+import { Url } from "next/dist/shared/lib/router/router";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 
+type name = {
+  common: string;
+  official: string;
+  nativeName: {
+    fra: {
+      official: string;
+      common: string;
+    };
+  };
+};
+
+type flags = {
+  png: string;
+  svg: string;
+  alt: string;
+};
+
 type countryFields = {
-  name: string;
-  flags: string;
-  population: string;
+  name: name;
+  flags: flags;
+  population: number;
   cca2: string;
   country: string;
   currency: string;
-  capital: string;
+  capital: string[];
 };
 
 interface countryFieldsExtra extends countryFields {
   unMember: string;
-  altSpellings: string;
-  languages: string;
-  landlocked: string;
-  maps: string;
+  altSpellings: string[];
+  languages: { string: string };
+  landlocked: boolean;
+  maps: { string: Url };
 }
 
 type JSONResponse = {
@@ -52,14 +70,10 @@ export default function Home() {
         const dataFields =
           "?fields=name,flags,population,cca2,country,currency,capital,unMember,altSpellings,languages,landlocked,maps";
         const all = `${base}/name/${id}${dataFields}`;
-
         const response = await fetch(all);
-        console.log(response);
-        console.log(response.error);
         const { data }: JSONResponse = await response.json();
         setCountry(data);
       } catch (error) {
-        // error is the message
         console.error("Error fetching country data:", error);
       }
     };
@@ -77,14 +91,15 @@ export default function Home() {
         priority
       />
       <ul>
-        {countries.map((country) => (
-          <li key={country.cca2}>
-            <h1 className="text-lg font-bold">{country.name.common}</h1>
-            <ul>
-              <li>{country.cca2}</li>
-            </ul>
-          </li>
-        ))}
+        {countries &&
+          countries.map((country) => (
+            <li key={country.cca2}>
+              <h1 className="text-lg font-bold">{country.name.common}</h1>
+              <ul>
+                <li>{country.cca2}</li>
+              </ul>
+            </li>
+          ))}
       </ul>
 
       <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
