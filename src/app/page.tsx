@@ -3,16 +3,40 @@
 import Image from "next/image";
 import { useEffect, useState } from "react";
 
+type countryFields = {
+  name: string;
+  flags: string;
+  population: string;
+  cca2: string;
+  country: string;
+  currency: string;
+  capital: string;
+};
+
+interface countryFieldsExtra extends countryFields {
+  unMember: string;
+  altSpellings: string;
+  languages: string;
+  landlocked: string;
+  maps: string;
+}
+
+type JSONResponse = {
+  data?: countryFieldsExtra[];
+  errors?: Array<{ message: string }>;
+};
+
 export default function Home() {
-  const [countries, setCountries] = useState([]);
-  const [country, setCountry] = useState([]);
+  const [countries, setCountries] = useState<countryFields[] | undefined>([]);
+  const [country, setCountry] = useState<countryFieldsExtra[] | undefined>([]);
   const base = process.env.NEXT_PUBLIC_COUNTRIES_BASE_URL;
 
   useEffect(() => {
     const fetchCountries = async () => {
       try {
-        const all = `${base}/all`;
-        const reducedDataPoints = `${base}/all?fields=name,flags,population,cca2,country,currency,capital`;
+        const dataFields =
+          "?fields=name,flags,population,cca2,country,currency,capital";
+        const all = `${base}/all${dataFields}`;
         const response = await fetch(all);
         const data = await response.json();
         setCountries(data);
@@ -23,14 +47,19 @@ export default function Home() {
 
     fetchCountries();
 
-    const fetchCountry = async (id) => {
+    const fetchCountry = async (id: string) => {
       try {
-        const all = `${base}/name/${id}`;
-        const reducedDataPoints = `${base}/all?fields=name,flags,population,cca2,country,currency,capital`;
+        const dataFields =
+          "?fields=name,flags,population,cca2,country,currency,capital,unMember,altSpellings,languages,landlocked,maps";
+        const all = `${base}/name/${id}${dataFields}`;
+
         const response = await fetch(all);
-        const data = await response.json();
+        console.log(response);
+        console.log(response.error);
+        const { data }: JSONResponse = await response.json();
         setCountry(data);
       } catch (error) {
+        // error is the message
         console.error("Error fetching country data:", error);
       }
     };
