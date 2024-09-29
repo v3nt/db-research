@@ -106,18 +106,20 @@ export default function Home() {
       >
         {countries && <AgGridReact rowData={countries} columnDefs={colDefs} />}
       </div>
-      <Image
-        className="dark:invert"
-        src="https://nextjs.org/icons/next.svg"
-        alt="Next.js logo"
-        width={180}
-        height={38}
-        priority
-      />
-      <ul>
+      <div className="py-6">
+        <Image
+          className="dark:invert"
+          src="https://nextjs.org/icons/next.svg"
+          alt="Next.js logo"
+          width={180}
+          height={38}
+          priority
+        />
+      </div>
+      <ul className="grid grid-cols-4">
         {countries &&
           countries.map((country) => (
-            <li key={country.cca2}>
+            <li key={country.cca2} className="">
               <h1 className="text-lg font-bold">{country.name.common}</h1>
               <ul>
                 <li>{country.cca2}</li>
