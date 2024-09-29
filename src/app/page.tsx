@@ -53,9 +53,27 @@ export default function Home() {
   const [countries, setCountries] = useState<countryFields[] | undefined>([]);
   const [country, setCountry] = useState<countryFieldsExtra[] | undefined>([]);
 
-  // AG grid
+  // name, language, or currency
+  // don't use AG grids. Mutate the countries array, re-build the table.
+  const [searchTerm, setSearchTerm] = useState<{
+    term: string;
+    field: string;
+  }>();
 
-  const [colDefs, setColDefs] = useState([
+  // pagination hook setup
+
+  // AG grid basic setup
+
+  // enables pagination in the grid
+  const pagination = true;
+
+  // sets 10 rows per page (default is 100)
+  const paginationPageSize = 10;
+
+  // allows the user to select the page size from a predefined list of page sizes
+  const paginationPageSizeSelector = [10, 20, 50, 100];
+
+  const [colDefs, setColDefs] = useState<{} | undefined>([
     { field: "name" },
     { field: "flags" },
     { field: "population" },
@@ -98,13 +116,53 @@ export default function Home() {
 
     fetchCountry("eesti");
   }, []);
+
+  const [favoriteNumber, setFavoriteNumber] = useState<string | undefined>();
+
+  // local storage
+  useEffect(() => {
+    let localValue;
+    // Get the value from local storage if it exists
+    localValue = localStorage.getItem("favoriteNumber") || "";
+    setFavoriteNumber(localValue);
+  }, []);
+
+  // Set the value received from the local storage to a local state
+  const saveToLocalStorage = (e) => {
+    e.preventDefault();
+    localStorage.setItem("favoriteNumber", favoriteNumber ?? "");
+    console.log("saveToLocalStorage", localStorage.getItem("favoriteNumber"));
+  };
+  // When user submits the form, save the favorite number to the local storage
+
   return (
     <>
+      <div className="py-4">
+        <h2>Form</h2>
+        <pre>Type in the input...</pre>
+        <form onSubmit={saveToLocalStorage}>
+          <input
+            id="number"
+            value={favoriteNumber || ""}
+            onChange={(e) => setFavoriteNumber(e.target.value)}
+          />
+          <input type="submit" value="Save" />
+        </form>
+        <pre>state: {favoriteNumber}</pre>
+      </div>
       <div
         className="ag-theme-quartz w-full" // applying the Data Grid theme
         style={{ height: 500 }} // the Data Grid will fill the size of the parent container
       >
-        {countries && <AgGridReact rowData={countries} columnDefs={colDefs} />}
+        {countries && (
+          <AgGridReact
+            pagination={pagination}
+            paginationPageSize={paginationPageSize}
+            paginationPageSizeSelector={paginationPageSizeSelector}
+            rowData={countries}
+            columnDefs={colDefs}
+          />
+        )}
       </div>
       <div className="py-6">
         <Image
