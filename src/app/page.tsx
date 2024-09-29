@@ -2,6 +2,11 @@
 
 import { Url } from "next/dist/shared/lib/router/router";
 import Image from "next/image";
+
+import { AgGridReact } from "ag-grid-react"; // React Data Grid Component
+import "ag-grid-community/styles/ag-grid.css"; // Mandatory CSS required by the Data Grid
+import "ag-grid-community/styles/ag-theme-quartz.css"; // Optional Theme applied to the Data Grid
+
 import { useEffect, useState } from "react";
 
 type name = {
@@ -47,6 +52,19 @@ type JSONResponse = {
 export default function Home() {
   const [countries, setCountries] = useState<countryFields[] | undefined>([]);
   const [country, setCountry] = useState<countryFieldsExtra[] | undefined>([]);
+
+  // AG grid
+
+  const [colDefs, setColDefs] = useState([
+    { field: "name" },
+    { field: "flags" },
+    { field: "population" },
+    { field: "cca2" },
+    { field: "country" },
+    { field: "currency" },
+    { field: "capital" },
+  ]);
+
   const base = process.env.NEXT_PUBLIC_COUNTRIES_BASE_URL;
 
   useEffect(() => {
@@ -82,6 +100,12 @@ export default function Home() {
   }, []);
   return (
     <>
+      <div
+        className="ag-theme-quartz w-full" // applying the Data Grid theme
+        style={{ height: 500 }} // the Data Grid will fill the size of the parent container
+      >
+        {countries && <AgGridReact rowData={countries} columnDefs={colDefs} />}
+      </div>
       <Image
         className="dark:invert"
         src="https://nextjs.org/icons/next.svg"
@@ -101,28 +125,6 @@ export default function Home() {
             </li>
           ))}
       </ul>
-
-      <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-        <li className="mb-2">
-          Get started by editing{" "}
-          <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-            src/app/page.tsx
-          </code>
-          .
-        </li>
-        <li>Save and see your changes instantly.</li>
-      </ol>
-
-      <div className="flex gap-4 items-center flex-col sm:flex-row">
-        <a
-          className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Read our docs
-        </a>
-      </div>
     </>
   );
 }
