@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import localFont from "next/font/local";
 import "./globals.css";
+import NextAuthProvider from './providers';
+import Header from "@/components/Header";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -24,17 +25,20 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+ 
+
   return (
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased mx-6`}
       >
-        <header className="py-4">Header</header>
+        <NextAuthProvider> 
+        <Header />
 
         <div className="w-full flex">
           <main className="">{children}</main>
         </div>
-
+        </NextAuthProvider>
         <footer className="py-4">footer</footer>
       </body>
     </html>
