@@ -27,38 +27,32 @@ type flags = {
 };
 
 type countryFields = {
-  name: name;
   flags: flags;
-  population: number;
+  name: name;
   cca2: string;
-  country: string;
-  currency: string;
   capital: string[];
+  population: number;
+  country: string;
+  currencies: string;
 };
+
+// "currencies": {
+//   "SHP": {
+//     "name": "Saint Helena pound",
+//     "symbol": "£"
+//   }
+// },
+
 
 interface countryFieldsExtra extends countryFields {
   unMember: string;
-  altSpellings: string[];
   languages: { string: string };
   landlocked: boolean;
   maps: { string: Url };
 }
-
-type JSONResponse = {
-  data?: countryFieldsExtra[];
-  errors?: Array<{ message: string }>;
-};
+ 
 
 export default function Home() {
-  const [countries, setCountries] = useState<countryFields[] | undefined>([]);
-  const [country, setCountry] = useState<countryFieldsExtra[] | undefined>([]);
-
-  // name, language, or currency
-  // don't use AG grids. Mutate the countries array, re-build the table.
-  const [searchTerm, setSearchTerm] = useState<{
-    term: string;
-    field: string;
-  }>();
 
   // pagination hook setup
 
@@ -73,49 +67,88 @@ export default function Home() {
   // allows the user to select the page size from a predefined list of page sizes
   const paginationPageSizeSelector = [10, 20, 50, 100];
 
-  const [colDefs, setColDefs] = useState<{} | undefined>([
-    { field: "name" },
-    { field: "flags" },
-    { field: "population" },
-    { field: "cca2" },
-    { field: "country" },
-    { field: "currency" },
-    { field: "capital" },
-  ]);
+  const [colDefs, setColDefs] = useState<{} | undefined>();
+  const [errors, setErrors] = useState<string | undefined>();
 
+
+  const [countries, setCountries] = useState<countryFields[]>([]);
+  const [country, setCountry] = useState<countryFieldsExtra[]>([]);
+
+  // name, language, or currencies
+  // don't use AG grids. Mutate the countries array, re-build the table.
+  const [searchTerm, setSearchTerm] = useState<{
+    term: string;
+    field: string;
+  }>();
+
+  
   const base = process.env.NEXT_PUBLIC_COUNTRIES_BASE_URL;
 
-  useEffect(() => {
     const fetchCountries = async () => {
       try {
         const dataFields =
-          "?fields=name,flags,population,cca2,country,currency,capital";
+          "?fields=name,flags,population,cca2,country,currencies,capital";
         const all = `${base}/all${dataFields}`;
         const response = await fetch(all);
-        const data = await response.json();
-        setCountries(data);
+        if (response.ok) {
+          const data : countryFields[] = await response.json();
+          // prepare the data here?
+          setCountries(data);
+        }else {
+          console.error('Promise resolved but HTTP status failed');
+        }
+
       } catch (error) {
+        setErrors('Failed to fetch countries list. See console for more details')
         console.error("Error fetching countries data:", error);
       }
     };
 
-    fetchCountries();
-
-    const fetchCountry = async (id: string) => {
+      const fetchCountry = async (id: string) => {
       try {
         const dataFields =
-          "?fields=name,flags,population,cca2,country,currency,capital,unMember,altSpellings,languages,landlocked,maps";
+          "?fields=name,flags,population,cca2,country,currencies,capital,unMember,languages,landlocked,maps";
         const all = `${base}/name/${id}${dataFields}`;
         const response = await fetch(all);
-        const { data }: JSONResponse = await response.json();
+        if (response.ok) {
+          const data : countryFieldsExtra[] = await response.json();        
         setCountry(data);
+        }else {
+          console.error('Promise resolved but HTTP status failed');
+        }
       } catch (error) {
+        setErrors('Failed to fetch country item. See console for more details')
         console.error("Error fetching country data:", error);
       }
     };
-
+ 
+  
+  useEffect(() => {
+    setColDefs([
+      { field: "name",        
+        valueGetter: ( params ) => {
+        return  params.data.name.common;
+      } 
+     },
+      { field: "flags",        
+        valueGetter: ( params ) => {
+        return  params.data.flags.png;
+      }  },
+      { field: "population" },
+      { field: "cca2" },
+      { field: "currencies",
+        valueGetter: (params:any|unknown) => {
+          const keyName = Object.keys(params.data.currencies)[0];
+          return params.data.currencies[keyName].name;
+        } 
+      },
+      { field: "capital" },
+    ]);
+    fetchCountries();
     fetchCountry("eesti");
+    
   }, []);
+
 
   const [favoriteNumber, setFavoriteNumber] = useState<string | undefined>();
 
@@ -128,10 +161,10 @@ export default function Home() {
   }, []);
 
   // Set the value received from the local storage to a local state
-  const saveToLocalStorage = (e) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     localStorage.setItem("favoriteNumber", favoriteNumber ?? "");
-    console.log("saveToLocalStorage", localStorage.getItem("favoriteNumber"));
+    console.log("handleSubmit", localStorage.getItem("favoriteNumber"));
   };
   // When user submits the form, save the favorite number to the local storage
 
@@ -140,7 +173,7 @@ export default function Home() {
       <div className="py-4">
         <h2>Form</h2>
         <pre>Type in the input...</pre>
-        <form onSubmit={saveToLocalStorage}>
+        <form onSubmit={handleSubmit}>
           <input
             id="number"
             value={favoriteNumber || ""}
@@ -149,7 +182,9 @@ export default function Home() {
           <input type="submit" value="Save" />
         </form>
         <pre>state: {favoriteNumber}</pre>
+ 
       </div>
+   
       <div
         className="ag-theme-quartz w-full" // applying the Data Grid theme
         style={{ height: 500 }} // the Data Grid will fill the size of the parent container
@@ -163,6 +198,8 @@ export default function Home() {
             columnDefs={colDefs}
           />
         )}
+      </div>
+      <div>
       </div>
       <div className="py-6">
         <Image
