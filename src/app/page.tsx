@@ -8,6 +8,7 @@ import "ag-grid-community/styles/ag-grid.css"; // Mandatory CSS required by the 
 import "ag-grid-community/styles/ag-theme-quartz.css"; // Optional Theme applied to the Data Grid
 
 import { useEffect, useState } from "react";
+import Input from "@/components/Input";
 
 type name = {
   common: string;
@@ -180,6 +181,13 @@ export default function Home() {
             onChange={(e) => setFavoriteNumber(e.target.value)}
             className="rounded-lg block mb-2 font-medium text-gray-900 dark:text-gray-900 px-5 py-2.5"
           />
+          <button type="submit" value="Save" className="text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800" >
+            Default
+          </button>
+        </form>
+        
+        <form onSubmit={handleSubmit}>
+          <Input />
           <button type="submit" value="Save" className="text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800" >
             Default
           </button>
