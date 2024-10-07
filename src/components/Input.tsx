@@ -1,10 +1,25 @@
+import { FC, InputHTMLAttributes } from 'react';
 import './Input.css';
-export default function Input({}){
-    return (
-    <input
-        id="123"
-        value="123"
-        name='123'
-        className="Input"
-    />)
+
+interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
+    name:string;
+    label:string;
 }
+
+ const Input:FC<InputProps> =({
+    placeholder,
+    name,
+    label,
+    onChange,
+    value,
+    ...rest
+  })=>{
+    return (
+<div className="mb-2 light">
+    <label htmlFor={`${name}`} className="Label">{label}</label>
+    <input type="text" id={`${name}`} className="Input" placeholder={placeholder} value={value} onChange={onChange} />
+</div>
+)
+}
+
+export default Input;
