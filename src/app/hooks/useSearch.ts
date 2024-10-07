@@ -7,6 +7,7 @@ interface SearchProps {
 
 const useSearch = ({ keys }: SearchProps) => {
   const [results, setResults] = useState<unknown>([]);
+  const [resultsMessage, setResultsMessage] = useState<string>();
   const [searchTerm, setSearchTerm] = useState<string | undefined>();
 
   const searchData = (
@@ -24,10 +25,22 @@ const useSearch = ({ keys }: SearchProps) => {
     }
     if (searchString?.length === 0) {
       setResults(data);
+      setResultsMessage("No matching results");
     }
   };
 
-  return { results, searchData, setSearchTerm, searchTerm };
+  const handleSearch = (e) => {
+    setSearchTerm(e.target.value);
+  };
+
+  return {
+    results,
+    searchData,
+    setSearchTerm,
+    searchTerm,
+    handleSearch,
+    resultsMessage,
+  };
 };
 
 export default useSearch;

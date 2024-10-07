@@ -13,6 +13,7 @@ import { countryFields } from "./types/countries";
  
 
 export default function Home() {
+  const baseUrl = process.env.NEXT_PUBLIC_COUNTRIES_BASE_URL;
 
   const pagination = true;
   // sets 10 rows per page (default is 100)
@@ -21,16 +22,14 @@ export default function Home() {
   const paginationPageSizeSelector = [10, 20, 50, 100];
 
   const [colDefs, setColDefs] = useState<{} | undefined>();
- 
 
-
-
-  const baseUrl = process.env.NEXT_PUBLIC_COUNTRIES_BASE_URL;
+  
   const {countries, fetchCountries, fetchCountry} = useCountries({baseUrl})
+
   const [tableData, setTableData] = useState<countryFields[]>([]);
 
   const useSearchProps = {data:countries, keys:['name','currencies']};
-  const {searchData, results,setSearchTerm,searchTerm} = useSearch(useSearchProps);
+  const {searchData, results,setSearchTerm,searchTerm,handleSearch} = useSearch(useSearchProps);
 
   
   useEffect(() => {
@@ -89,18 +88,13 @@ export default function Home() {
     setTableData(results)
   }, [results]);
 
-  const handleSearch =  (e) => {
-    setSearchTerm(e.target.value)
-    localStorage.setItem("favoriteNumber", favoriteNumber ?? "");
-  };
+
   // When user submits the form, save the favorite number to the local storage
 
   return (
     <>
       <div className="py-4">
-        <h2>Form</h2>
-        <pre>Type in the input...</pre>
-        <form onSubmit={handleSubmit}>
+        {/* <form onSubmit={handleSubmit}>
           <input
             id="number"
             value={favoriteNumber || ""}
@@ -110,10 +104,10 @@ export default function Home() {
           <button type="submit" value="Save" className="text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800" >
             Default
           </button>
-        </form>
+        </form> */}
 
         <form onSubmit={handleSubmit}>
-          <Input name="my-input" label="My Input label" onChange={handleSearch} />
+          <Input name="my-input" label="Search" onChange={handleSearch} />
           <button type="submit" value="Save" className="text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800" >
             Default
           </button>
