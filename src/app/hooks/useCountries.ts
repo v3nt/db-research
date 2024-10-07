@@ -13,15 +13,17 @@ const useCountries = ({ baseUrl }: CountryProps) => {
   const fetchCountries = async () => {
     try {
       const dataFields =
-        "?fields=name,flags,population,cca2,country,currencies,capital";
+        "?fields=name,flags,population,cca2,country,currencies,capital,languages";
       const all = `${baseUrl}/all${dataFields}`;
       const response = await fetch(all);
       if (response.ok) {
         const data: countryFields[] = await response.json();
-        // prepare the data here?
         setCountries(data);
       } else {
-        console.error("Promise resolved but HTTP status failed");
+        console.error(
+          "Promise resolved but HTTP status failed",
+          response.status
+        );
       }
     } catch (error) {
       setErrors("Failed to fetch countries list. See console for more details");
@@ -39,7 +41,10 @@ const useCountries = ({ baseUrl }: CountryProps) => {
         const data: countryFieldsExtra[] = await response.json();
         setCountry(data);
       } else {
-        console.error("Promise resolved but HTTP status failed");
+        console.error(
+          "Promise resolved but HTTP status failed",
+          response.status
+        );
       }
     } catch (error) {
       setErrors("Failed to fetch country item. See console for more details");

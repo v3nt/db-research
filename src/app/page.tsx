@@ -28,7 +28,7 @@ export default function Home() {
 
   const [tableData, setTableData] = useState<countryFields[]>([]);
 
-  const useSearchProps = {data:countries, keys:['name','currencies']};
+  const useSearchProps = {data:countries, keys:['name','currencies','languages']};
   const {searchData, results,setSearchTerm,searchTerm,handleSearch} = useSearch(useSearchProps);
 
   
@@ -48,20 +48,24 @@ export default function Home() {
       { field: "currencies",
         valueGetter: (params:any|unknown) => {
           const keyName = Object.keys(params.data.currencies)[0];
-          return params.data.currencies[keyName].name;
+          return params.data.currencies[keyName]?.name;
         } 
       },
       { field: "capital" },
     ]);
     fetchCountries();
     fetchCountry("eesti");
- 
+    setTableData(countries)
 
   }, []);
 
   useEffect(() => {
     setTableData(countries)
   }, [countries]);
+
+  useEffect(() => {
+    setTableData(results)
+  }, [results]);
 
   const [favoriteNumber, setFavoriteNumber] = useState<string | undefined>();
 
@@ -80,13 +84,13 @@ export default function Home() {
     console.log("handleSubmit", localStorage.getItem("favoriteNumber"));
   };
 
+
+
+
+
   useEffect(() => {
     searchData(searchTerm,countries);
   }, [searchTerm]);
-
-  useEffect(() => {
-    setTableData(results)
-  }, [results]);
 
 
   // When user submits the form, save the favorite number to the local storage
@@ -112,8 +116,7 @@ export default function Home() {
             Default
           </button>
         </form>
-        <pre>state: {favoriteNumber}</pre>
- 
+  
       </div>
    
       <div
@@ -132,16 +135,7 @@ export default function Home() {
       </div>
       <div>
       </div>
-      <div className="py-6">
-        <Image
-          className="dark:invert"
-          src="https://nextjs.org/icons/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-      </div>
+ 
       <ul className="grid grid-cols-4">
         {tableData &&
           tableData.map((country) => (

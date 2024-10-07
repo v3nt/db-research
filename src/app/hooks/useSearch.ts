@@ -6,7 +6,7 @@ interface SearchProps {
 }
 
 const useSearch = ({ keys }: SearchProps) => {
-  const [results, setResults] = useState<unknown>([]);
+  const [results, setResults] = useState<countryFields[]>([]);
   const [resultsMessage, setResultsMessage] = useState<string>();
   const [searchTerm, setSearchTerm] = useState<string | undefined>();
 
@@ -14,11 +14,10 @@ const useSearch = ({ keys }: SearchProps) => {
     searchString: string | undefined,
     data: countryFields[]
   ) => {
+    const arr = ["name", "common"];
     const filteredData = data?.filter((item: unknown) =>
-      item.name.common.toLowerCase().includes(searchString?.toLowerCase())
+      item["name"]["common"].toLowerCase().includes(searchString?.toLowerCase())
     );
-
-    console.log("filteredData", searchString, filteredData);
 
     if (filteredData.length > 0) {
       setResults(filteredData);
