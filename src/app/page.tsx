@@ -1,128 +1,37 @@
 "use client";
 
-import { Url } from "next/dist/shared/lib/router/router";
 import Image from "next/image";
-
 import { AgGridReact } from "ag-grid-react"; // React Data Grid Component
 import "ag-grid-community/styles/ag-grid.css"; // Mandatory CSS required by the Data Grid
 import "ag-grid-community/styles/ag-theme-quartz.css"; // Optional Theme applied to the Data Grid
-
 import { useEffect, useState } from "react";
+
+import useCountries from "./hooks/useCountries";
+import useSearch from "./hooks/useSearch";
 import Input from "@/components/Input";
-
-type name = {
-  common: string;
-  official: string;
-  nativeName: {
-    fra: {
-      official: string;
-      common: string;
-    };
-  };
-};
-
-type flags = {
-  png: string;
-  svg: string;
-  alt: string;
-};
-
-type countryFields = {
-  flags: flags;
-  name: name;
-  cca2: string;
-  capital: string[];
-  population: number;
-  country: string;
-  currencies: string;
-};
-
-// "currencies": {
-//   "SHP": {
-//     "name": "Saint Helena pound",
-//     "symbol": "£"
-//   }
-// },
-
-
-interface countryFieldsExtra extends countryFields {
-  unMember: string;
-  languages: { string: string };
-  landlocked: boolean;
-  maps: { string: Url };
-}
+import { countryFields } from "./types/countries";
  
 
 export default function Home() {
 
-  // pagination hook setup
-
-  // AG grid basic setup
-
-  // enables pagination in the grid
   const pagination = true;
-
   // sets 10 rows per page (default is 100)
   const paginationPageSize = 10;
-
   // allows the user to select the page size from a predefined list of page sizes
   const paginationPageSizeSelector = [10, 20, 50, 100];
 
   const [colDefs, setColDefs] = useState<{} | undefined>();
-  const [errors, setErrors] = useState<string | undefined>();
-
-
-  const [countries, setCountries] = useState<countryFields[]>([]);
-  const [country, setCountry] = useState<countryFieldsExtra[]>([]);
-
-  // name, language, or currencies
-  // don't use AG grids. Mutate the countries array, re-build the table.
-  const [searchTerm, setSearchTerm] = useState<{
-    term: string;
-    field: string;
-  }>();
-
-  
-  const base = process.env.NEXT_PUBLIC_COUNTRIES_BASE_URL;
-
-    const fetchCountries = async () => {
-      try {
-        const dataFields =
-          "?fields=name,flags,population,cca2,country,currencies,capital";
-        const all = `${base}/all${dataFields}`;
-        const response = await fetch(all);
-        if (response.ok) {
-          const data : countryFields[] = await response.json();
-          // prepare the data here?
-          setCountries(data);
-        }else {
-          console.error('Promise resolved but HTTP status failed');
-        }
-
-      } catch (error) {
-        setErrors('Failed to fetch countries list. See console for more details')
-        console.error("Error fetching countries data:", error);
-      }
-    };
-
-      const fetchCountry = async (id: string) => {
-      try {
-        const dataFields =
-          "?fields=name,flags,population,cca2,country,currencies,capital,unMember,languages,landlocked,maps";
-        const all = `${base}/name/${id}${dataFields}`;
-        const response = await fetch(all);
-        if (response.ok) {
-          const data : countryFieldsExtra[] = await response.json();        
-        setCountry(data);
-        }else {
-          console.error('Promise resolved but HTTP status failed');
-        }
-      } catch (error) {
-        setErrors('Failed to fetch country item. See console for more details')
-        console.error("Error fetching country data:", error);
-      }
-    };
  
+
+
+
+  const baseUrl = process.env.NEXT_PUBLIC_COUNTRIES_BASE_URL;
+  const {countries, fetchCountries, fetchCountry} = useCountries({baseUrl})
+  const [tableData, setTableData] = useState<countryFields[]>([]);
+
+  const useSearchProps = {data:countries, keys:['name','currencies']};
+  const {searchData, results,setSearchTerm,searchTerm} = useSearch(useSearchProps);
+
   
   useEffect(() => {
     setColDefs([
@@ -147,9 +56,13 @@ export default function Home() {
     ]);
     fetchCountries();
     fetchCountry("eesti");
+ 
 
   }, []);
 
+  useEffect(() => {
+    setTableData(countries)
+  }, [countries]);
 
   const [favoriteNumber, setFavoriteNumber] = useState<string | undefined>();
 
@@ -166,6 +79,19 @@ export default function Home() {
     e.preventDefault();
     localStorage.setItem("favoriteNumber", favoriteNumber ?? "");
     console.log("handleSubmit", localStorage.getItem("favoriteNumber"));
+  };
+
+  useEffect(() => {
+    searchData(searchTerm,countries);
+  }, [searchTerm]);
+
+  useEffect(() => {
+    setTableData(results)
+  }, [results]);
+
+  const handleSearch =  (e) => {
+    setSearchTerm(e.target.value)
+    localStorage.setItem("favoriteNumber", favoriteNumber ?? "");
   };
   // When user submits the form, save the favorite number to the local storage
 
@@ -187,7 +113,7 @@ export default function Home() {
         </form>
 
         <form onSubmit={handleSubmit}>
-          <Input name="my-input" label="My Input label" onChange={(e)=>console.log(e.target.value)} />
+          <Input name="my-input" label="My Input label" onChange={handleSearch} />
           <button type="submit" value="Save" className="text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800" >
             Default
           </button>
@@ -200,12 +126,12 @@ export default function Home() {
         className="ag-theme-quartz w-full" // applying the Data Grid theme
         style={{ height: 500 }} // the Data Grid will fill the size of the parent container
       >
-        {countries && (
+        {tableData && (
           <AgGridReact
             pagination={pagination}
             paginationPageSize={paginationPageSize}
             paginationPageSizeSelector={paginationPageSizeSelector}
-            rowData={countries}
+            rowData={tableData}
             columnDefs={colDefs}
           />
         )}
@@ -223,8 +149,8 @@ export default function Home() {
         />
       </div>
       <ul className="grid grid-cols-4">
-        {countries &&
-          countries.map((country) => (
+        {tableData &&
+          tableData.map((country) => (
             <li key={country.cca2} className="">
               <h1 className="text-lg font-bold">{country.name.common}</h1>
               <ul>
