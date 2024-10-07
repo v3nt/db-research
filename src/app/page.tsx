@@ -146,7 +146,7 @@ export default function Home() {
     ]);
     fetchCountries();
     fetchCountry("eesti");
-    
+
   }, []);
 
 
@@ -178,8 +178,11 @@ export default function Home() {
             id="number"
             value={favoriteNumber || ""}
             onChange={(e) => setFavoriteNumber(e.target.value)}
+            className="rounded-lg block mb-2 font-medium text-gray-900 dark:text-gray-900 px-5 py-2.5"
           />
-          <input type="submit" value="Save" />
+          <button type="submit" value="Save" className="text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800" >
+            Default
+          </button>
         </form>
         <pre>state: {favoriteNumber}</pre>
  
