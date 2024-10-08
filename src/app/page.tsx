@@ -162,7 +162,7 @@ export default function Home() {
         </form>
       </div>
 
-      <div className='ag-theme-quartz w-full' style={{ height: 500 }}>
+      <div className='ag-theme-quartz w-full' style={{ height: 518 }}>
         {tableData && (
           <AgGridReact
             pagination={pagination}
