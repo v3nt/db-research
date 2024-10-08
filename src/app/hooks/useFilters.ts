@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { countryFields } from '../types/countries';
+import { InputSelectList } from '../types/base';
 
 interface FilterProps {
   data: countryFields[];
@@ -7,17 +8,14 @@ interface FilterProps {
   updateWithDataChange: boolean;
 }
 
-interface FilterList {
-  label: string;
-  value: string;
-}
-
 const useFilters = ({
   data = [],
   updateWithDataChange = false,
   updatedData = [],
 }: FilterProps) => {
-  const [currencies, setCurrencies] = useState<FilterList[] | undefined>([]);
+  const [currencies, setCurrencies] = useState<InputSelectList[] | undefined>(
+    []
+  );
 
   const itemsCurrency = () => {
     const dataToUse = updateWithDataChange ? updatedData : data;
@@ -34,7 +32,9 @@ const useFilters = ({
 
     const itemsUnique = items.reduce((accumulator, current) => {
       if (
-        !accumulator.find((item: FilterList) => item?.label === current?.label)
+        !accumulator.find(
+          (item: InputSelectList) => item?.label === current?.label
+        )
       ) {
         accumulator.push(current);
       }

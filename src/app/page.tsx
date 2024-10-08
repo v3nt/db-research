@@ -11,9 +11,10 @@ import useSearch from './hooks/useSearch';
 import Input from '@/components/Input';
 import { countryFields } from './types/countries';
 import useFilters from './hooks/useFilters';
+import InputSelect from '@/components/InputSelect';
 
 export default function Home() {
-   const baseUrl = process.env.NEXT_PUBLIC_COUNTRIES_BASE_URL;
+  const baseUrl = process.env.NEXT_PUBLIC_COUNTRIES_BASE_URL;
 
   const pagination = true;
   // sets 10 rows per page (default is 100)
@@ -36,13 +37,8 @@ export default function Home() {
     data: countries,
     keys: ['name', 'currencies', 'languages'],
   };
-  const {
-    searchDataByString,
-    results,
-    setSearchTerm,
-    searchTerm,
-    handleSearch,
-  } = useSearch(useSearchProps);
+  const { searchDataByString, results, searchTerm, handleSearch } =
+    useSearch(useSearchProps);
 
   useEffect(() => {
     setColDefs([
@@ -104,8 +100,6 @@ export default function Home() {
     searchDataByString(searchTerm, countries);
   }, [searchTerm]);
 
-  // When user submits the form, save the favorite number to the local storage
-
   return (
     <>
       <div className='py-4'>
@@ -122,7 +116,13 @@ export default function Home() {
         </form> */}
 
         <form onSubmit={handleSubmit}>
-          <Input name='my-input' label='Search' onChange={handleSearch} />
+          <Input name='my-input' label='Search' onChange={handleSearch} />{' '}
+          <InputSelect
+            name='filterCurrencies'
+            label='Currencies'
+            options={currencies}
+            onChange={(e) => console.log(e.currentTarget.value)}
+          />
           <button
             type='submit'
             value='Save'

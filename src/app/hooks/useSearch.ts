@@ -35,7 +35,6 @@ const useSearch = ({ keys }: SearchProps) => {
   return {
     results,
     searchDataByString,
-    setSearchTerm,
     searchTerm,
     handleSearch,
     resultsMessage,

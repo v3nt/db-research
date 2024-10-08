@@ -21,7 +21,7 @@ const Input: FC<InputProps> = ({
       </label>
       <input
         type='text'
-        id={`${name}`}
+        id={name}
         className='Input'
         placeholder={placeholder}
         value={value}
