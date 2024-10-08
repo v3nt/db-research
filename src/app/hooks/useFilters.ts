@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { countryFields } from "../types/countries";
+import { useEffect, useState } from 'react';
+import { countryFields } from '../types/countries';
 
 interface FilterProps {
   data: countryFields[];

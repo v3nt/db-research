@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { countryFields, countryFieldsExtra } from "../types/countries";
+import { useState } from 'react';
+import { countryFields, countryFieldsExtra } from '../types/countries';
 
 interface CountryProps {
   baseUrl: string | undefined;
@@ -13,7 +13,7 @@ const useCountries = ({ baseUrl }: CountryProps) => {
   const fetchCountries = async () => {
     try {
       const dataFields =
-        "?fields=name,flags,population,cca2,country,currencies,capital,languages";
+        '?fields=name,flags,population,cca2,country,currencies,capital,languages';
       const all = `${baseUrl}/all${dataFields}`;
       const response = await fetch(all);
       if (response.ok) {
@@ -21,20 +21,20 @@ const useCountries = ({ baseUrl }: CountryProps) => {
         setCountries(data);
       } else {
         console.error(
-          "Promise resolved but HTTP status failed",
+          'Promise resolved but HTTP status failed',
           response.status
         );
       }
     } catch (error) {
-      setErrors("Failed to fetch countries list. See console for more details");
-      console.error("Error fetching countries data:", error);
+      setErrors('Failed to fetch countries list. See console for more details');
+      console.error('Error fetching countries data:', error);
     }
   };
 
   const fetchCountry = async (id: string) => {
     try {
       const dataFields =
-        "?fields=name,flags,population,cca2,country,currencies,capital,unMember,languages,landlocked,maps";
+        '?fields=name,flags,population,cca2,country,currencies,capital,unMember,languages,landlocked,maps';
       const all = `${baseUrl}/name/${id}${dataFields}`;
       const response = await fetch(all);
       if (response.ok) {
@@ -42,13 +42,13 @@ const useCountries = ({ baseUrl }: CountryProps) => {
         setCountry(data);
       } else {
         console.error(
-          "Promise resolved but HTTP status failed",
+          'Promise resolved but HTTP status failed',
           response.status
         );
       }
     } catch (error) {
-      setErrors("Failed to fetch country item. See console for more details");
-      console.error("Error fetching country data:", error);
+      setErrors('Failed to fetch country item. See console for more details');
+      console.error('Error fetching country data:', error);
     }
   };
 

@@ -1,4 +1,4 @@
-import { Url } from "url";
+import { Url } from 'url';
 
 type name = {
   common: string;

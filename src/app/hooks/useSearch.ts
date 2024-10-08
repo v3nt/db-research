@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { countryFields } from "../types/countries";
+import { useState } from 'react';
+import { countryFields } from '../types/countries';
 
 interface SearchProps {
   keys: string[];
@@ -16,7 +16,7 @@ const useSearch = ({ keys }: SearchProps) => {
   ) => {
     // TODO: refine types
     const filteredData = data?.filter(({ name }: any) =>
-      name["common"].toLowerCase().includes(searchString?.toLowerCase())
+      name['common'].toLowerCase().includes(searchString?.toLowerCase())
     );
 
     if (filteredData.length > 0) {
@@ -24,7 +24,7 @@ const useSearch = ({ keys }: SearchProps) => {
     }
     if (searchString?.length === 0) {
       setResults(data);
-      setResultsMessage("No matching results");
+      setResultsMessage('No matching results');
     }
   };
 
