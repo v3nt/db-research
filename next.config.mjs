@@ -1,5 +1,15 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'flagcdn.com',
+        port: '',
+        pathname: '/**',
+      },
+    ],
+  },
   typescript: {
     // !! WARN !!
     // Dangerously allow production builds to successfully complete even if

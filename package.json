@@ -10,6 +10,7 @@
     "format": "prettier --write ."
   },
   "dependencies": {
+    "ag-grid-community": "^32.2.2",
     "ag-grid-react": "^32.2.1",
     "next": "14.2.13",
     "next-auth": "^4.24.8",

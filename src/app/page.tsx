@@ -4,6 +4,8 @@ import Image from 'next/image';
 import { AgGridReact } from 'ag-grid-react'; // React Data Grid Component
 import 'ag-grid-community/styles/ag-grid.css'; // Mandatory CSS required by the Data Grid
 import 'ag-grid-community/styles/ag-theme-quartz.css'; // Optional Theme applied to the Data Grid
+import type { ColDef } from 'ag-grid-community';
+
 import { useEffect, useState } from 'react';
 
 import useCountries from './hooks/useCountries';
@@ -12,6 +14,7 @@ import Input from '@/components/Input';
 import { countryFields } from './types/countries';
 import useFilters from './hooks/useFilters';
 import InputSelect from '@/components/InputSelect';
+import ButtonFavorite from '@/components/ButtonFavourite';
 
 export default function Home() {
   const baseUrl = process.env.NEXT_PUBLIC_COUNTRIES_BASE_URL;
@@ -22,7 +25,7 @@ export default function Home() {
   // allows the user to select the page size from a predefined list of page sizes
   const paginationPageSizeSelector = [10, 20, 50, 100];
 
-  const [colDefs, setColDefs] = useState<{} | undefined>();
+  const [colDefs, setColDefs] = useState<ColDef[] | undefined>();
   const [tableData, setTableData] = useState<countryFields[]>([]);
 
   const { countries, fetchCountries, fetchCountry } = useCountries({ baseUrl });
@@ -43,17 +46,33 @@ export default function Home() {
   useEffect(() => {
     setColDefs([
       {
-        field: 'name',
-        valueGetter: (params) => {
-          return params.data.name.common;
+        field: 'Favorite',
+        cellRenderer: ButtonFavorite,
+        cellRendererParams: {
+          onClick: (event) => console.log(event),
+          label: 'Save ',
+          icon: 'FAV',
         },
+        // onCellClicked: (event: CellClickedEvent) =>
+        //   console.log('Cell was clicked', event.data, event),
+      },
+      {
+        field: 'name',
+        valueGetter: (params) => params.data.name.common,
       },
       {
         field: 'flags',
-        component: Image,
         valueGetter: (params) => {
           return params.data.flags.png;
         },
+        cellRenderer: ({ data }) => (
+          <Image
+            src={data?.flags.png}
+            alt='country flag'
+            width={64}
+            height={38}
+          />
+        ),
       },
       { field: 'population' },
       { field: 'cca2' },
