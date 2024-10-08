@@ -10,6 +10,7 @@ import useCountries from "./hooks/useCountries";
 import useSearch from "./hooks/useSearch";
 import Input from "@/components/Input";
 import { countryFields } from "./types/countries";
+import useFilters from "./hooks/useFilters";
  
 
 export default function Home() {
@@ -26,10 +27,12 @@ export default function Home() {
   
   const {countries, fetchCountries, fetchCountry} = useCountries({baseUrl})
 
+  const { currencies } = useFilters({data:countries, updateWithDataChange:false});
+
   const [tableData, setTableData] = useState<countryFields[]>([]);
 
   const useSearchProps = {data:countries, keys:['name','currencies','languages']};
-  const {searchData, results,setSearchTerm,searchTerm,handleSearch} = useSearch(useSearchProps);
+  const {searchDataByString, results,setSearchTerm,searchTerm,handleSearch} = useSearch(useSearchProps);
 
   
   useEffect(() => {
@@ -39,10 +42,12 @@ export default function Home() {
         return  params.data.name.common;
       } 
      },
-      { field: "flags",        
+      { field: "flags", 
+        component: Image,       
         valueGetter: ( params ) => {
         return  params.data.flags.png;
-      }  },
+      }  
+    },
       { field: "population" },
       { field: "cca2" },
       { field: "currencies",
@@ -89,7 +94,7 @@ export default function Home() {
 
 
   useEffect(() => {
-    searchData(searchTerm,countries);
+    searchDataByString(searchTerm,countries);
   }, [searchTerm]);
 
 
@@ -135,10 +140,14 @@ export default function Home() {
       </div>
       <div>
       </div>
- 
+      <div>
+            {currencies && (<div>
+              {currencies.map((item,index) => (<div key={index}>{item?.label} {item?.value}</div>))}
+            </div>)}
+          </div>
       <ul className="grid grid-cols-4">
         {tableData &&
-          tableData.map((country) => (
+          tableData.map((country,index) => (
             <li key={country.cca2} className="">
               <h1 className="text-lg font-bold">{country.name.common}</h1>
               <ul>

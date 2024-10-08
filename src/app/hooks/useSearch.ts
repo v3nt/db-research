@@ -10,13 +10,13 @@ const useSearch = ({ keys }: SearchProps) => {
   const [resultsMessage, setResultsMessage] = useState<string>();
   const [searchTerm, setSearchTerm] = useState<string | undefined>();
 
-  const searchData = (
+  const searchDataByString = (
     searchString: string | undefined,
     data: countryFields[]
   ) => {
-    const arr = ["name", "common"];
-    const filteredData = data?.filter((item: unknown) =>
-      item["name"]["common"].toLowerCase().includes(searchString?.toLowerCase())
+    // TODO: refine types
+    const filteredData = data?.filter(({ name }: any) =>
+      name["common"].toLowerCase().includes(searchString?.toLowerCase())
     );
 
     if (filteredData.length > 0) {
@@ -34,7 +34,7 @@ const useSearch = ({ keys }: SearchProps) => {
 
   return {
     results,
-    searchData,
+    searchDataByString,
     setSearchTerm,
     searchTerm,
     handleSearch,

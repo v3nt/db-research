@@ -24,15 +24,15 @@ export type countryFields = {
   capital: string[];
   population: number;
   country: string;
-  currencies: string;
+  currencies: currencies;
 };
 
-// "currencies": {
-//   "SHP": {
-//     "name": "Saint Helena pound",
-//     "symbol": "£"
-//   }
-// },
+type currencies = {
+  [key: string]: {
+    name: string;
+    symbol: string;
+  };
+};
 
 export interface countryFieldsExtra extends countryFields {
   unMember: string;
