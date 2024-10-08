@@ -18,6 +18,7 @@ type flags = {
 };
 
 export type countryFields = {
+  id: string;
   flags: flags;
   name: name;
   cca2: string;

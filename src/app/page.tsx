@@ -15,6 +15,7 @@ import { countryFields } from './types/countries';
 import useFilters from './hooks/useFilters';
 import InputSelect from '@/components/InputSelect';
 import ButtonFavorite from '@/components/ButtonFavourite';
+import useFavorites from './hooks/useFavorites';
 
 export default function Home() {
   const baseUrl = process.env.NEXT_PUBLIC_COUNTRIES_BASE_URL;
@@ -29,6 +30,7 @@ export default function Home() {
   const [tableData, setTableData] = useState<countryFields[]>([]);
 
   const { countries, fetchCountries, fetchCountry } = useCountries({ baseUrl });
+  const { favorites } = useFavorites({});
 
   const { currencies } = useFilters({
     data: countries,
@@ -92,6 +94,7 @@ export default function Home() {
 
   useEffect(() => {
     setTableData(countries);
+    console.log(countries);
   }, [countries]);
 
   useEffect(() => {

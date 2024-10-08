@@ -18,7 +18,12 @@ const useCountries = ({ baseUrl }: CountryProps) => {
       const response = await fetch(all);
       if (response.ok) {
         const data: countryFields[] = await response.json();
-        setCountries(data);
+        // add ID to array.
+        setCountries(() =>
+          data.map((country) => {
+            return { ...country, id: country.cca2 };
+          })
+        );
       } else {
         console.error(
           'Promise resolved but HTTP status failed',
