@@ -69,7 +69,7 @@ export default function Home() {
     fetchCountries();
     fetchCountry('eesti');
     setTableData(countries);
-  }, []);
+  });
 
   useEffect(() => {
     setTableData(countries);

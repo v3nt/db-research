@@ -1,21 +1,19 @@
 import { useState } from 'react';
 import { countryFields } from '../types/countries';
 
-interface SearchProps {
-  keys: string[];
-}
+// TODO: keys to search
+// interface SearchProps {
+//   keys: string[];
+// }
 
-const useSearch = ({ keys }: SearchProps) => {
+const useSearch = () => {
   const [results, setResults] = useState<countryFields[]>([]);
   const [resultsMessage, setResultsMessage] = useState<string>();
   const [searchTerm, setSearchTerm] = useState<string | undefined>();
 
-  const searchDataByString = (
-    searchString: string | undefined,
-    data: countryFields[]
-  ) => {
+  const searchDataByString = (searchString: string, data: countryFields[]) => {
     // TODO: refine types
-    const filteredData = data?.filter(({ name }: any) =>
+    const filteredData = data?.filter(({ name }: countryFields) =>
       name['common'].toLowerCase().includes(searchString?.toLowerCase())
     );
 
