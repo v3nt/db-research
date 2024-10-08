@@ -1,10 +1,11 @@
 import { FC, InputHTMLAttributes } from 'react';
-import './Input.css';
+import './InputSelect.css';
 import { InputSelectList } from '@/app/types/base';
 
 interface InputProps extends InputHTMLAttributes<HTMLSelectElement> {
   name: string;
   label: string;
+  instructions?: string;
   options: InputSelectList[] | undefined;
 }
 
@@ -14,6 +15,7 @@ const InputSelect: FC<InputProps> = ({
   onChange,
   value,
   options,
+  instructions,
 }) => {
   return (
     <div className='light mb-2'>
@@ -27,6 +29,7 @@ const InputSelect: FC<InputProps> = ({
         value={value}
         onChange={onChange}
       >
+        <option value=''>{instructions}</option>
         {options?.length &&
           options.map((item: InputSelectList, index: number) => {
             return (

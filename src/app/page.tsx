@@ -23,6 +23,7 @@ export default function Home() {
   const paginationPageSizeSelector = [10, 20, 50, 100];
 
   const [colDefs, setColDefs] = useState<{} | undefined>();
+  const [tableData, setTableData] = useState<countryFields[]>([]);
 
   const { countries, fetchCountries, fetchCountry } = useCountries({ baseUrl });
 
@@ -31,14 +32,13 @@ export default function Home() {
     updateWithDataChange: false,
   });
 
-  const [tableData, setTableData] = useState<countryFields[]>([]);
-
-  const useSearchProps = {
-    data: countries,
-    keys: ['name', 'currencies', 'languages'],
-  };
-  const { searchDataByString, results, searchTerm, handleSearch } =
-    useSearch(useSearchProps);
+  const {
+    searchDataByString,
+    results,
+    searchTerm,
+    handleSearch,
+    filterDataByCurrency,
+  } = useSearch();
 
   useEffect(() => {
     setColDefs([
@@ -69,7 +69,7 @@ export default function Home() {
     fetchCountries();
     fetchCountry('eesti');
     setTableData(countries);
-  });
+  }, []);
 
   useEffect(() => {
     setTableData(countries);
@@ -82,9 +82,9 @@ export default function Home() {
   const [favoriteNumber, setFavoriteNumber] = useState<string | undefined>();
 
   // local storage
+  // TODO: configure with favs
   useEffect(() => {
     let localValue;
-    // Get the value from local storage if it exists
     localValue = localStorage.getItem('favoriteNumber') || '';
     setFavoriteNumber(localValue);
   }, []);
@@ -96,13 +96,17 @@ export default function Home() {
     console.log('handleSubmit', localStorage.getItem('favoriteNumber'));
   };
 
+  const handleFilterChange = (value: string) => {
+    filterDataByCurrency(value, countries);
+  };
+
   useEffect(() => {
     searchDataByString(searchTerm, countries);
   }, [searchTerm]);
 
   return (
     <>
-      <div className='py-4'>
+      <div className='w-full py-4'>
         {/* <form onSubmit={handleSubmit}>
           <input
             id="number"
@@ -116,12 +120,18 @@ export default function Home() {
         </form> */}
 
         <form onSubmit={handleSubmit}>
-          <Input name='my-input' label='Search' onChange={handleSearch} />{' '}
+          <Input
+            name='my-input'
+            label='Search'
+            onChange={handleSearch}
+            placeholder='Search by name'
+          />
           <InputSelect
             name='filterCurrencies'
             label='Currencies'
+            instructions='Choose a currency...'
             options={currencies}
-            onChange={(e) => console.log(e.currentTarget.value)}
+            onChange={(e) => handleFilterChange(e.currentTarget.value)}
           />
           <button
             type='submit'
@@ -133,10 +143,7 @@ export default function Home() {
         </form>
       </div>
 
-      <div
-        className='ag-theme-quartz w-full' // applying the Data Grid theme
-        style={{ height: 500 }} // the Data Grid will fill the size of the parent container
-      >
+      <div className='ag-theme-quartz w-full' style={{ height: 500 }}>
         {tableData && (
           <AgGridReact
             pagination={pagination}
@@ -147,29 +154,6 @@ export default function Home() {
           />
         )}
       </div>
-      <div></div>
-      <div>
-        {currencies && (
-          <div>
-            {currencies.map((item, index) => (
-              <div key={index}>
-                {item?.label} {item?.value}
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
-      <ul className='grid grid-cols-4'>
-        {tableData &&
-          tableData.map((country, index) => (
-            <li key={country.cca2} className=''>
-              <h1 className='text-lg font-bold'>{country.name.common}</h1>
-              <ul>
-                <li>{country.cca2}</li>
-              </ul>
-            </li>
-          ))}
-      </ul>
     </>
   );
 }

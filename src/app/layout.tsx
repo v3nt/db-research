@@ -33,7 +33,7 @@ export default function RootLayout({
         <NextAuthProvider>
           <Header />
 
-          <div className='flex w-full'>
+          <div className='w-full'>
             <main className=''>{children}</main>
           </div>
         </NextAuthProvider>
