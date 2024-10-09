@@ -3,15 +3,17 @@ import { countryFields, CountryFieldsExtra } from '../types/countries';
 
 interface CountryProps {
   baseUrl: string | undefined;
-  favoriteIds?: string[];
 }
 
-const useCountries = ({ baseUrl, favoriteIds }: CountryProps) => {
+const useCountries = ({ baseUrl }: CountryProps) => {
   const [countries, setCountries] = useState<countryFields[]>([]);
   const [country, setCountry] = useState<CountryFieldsExtra>();
   const [errors, setErrors] = useState<string | undefined>();
+  const [countriesLoading, setCountriesLoading] = useState<boolean>(false);
+  const [countryLoading, setCountryLoading] = useState<boolean>(false);
 
   const fetchCountries = async () => {
+    setCountriesLoading(true);
     try {
       const dataFields =
         '?fields=name,flags,population,cca2,country,currencies,capital,languages';
@@ -35,20 +37,23 @@ const useCountries = ({ baseUrl, favoriteIds }: CountryProps) => {
           response.status
         );
       }
+      setCountriesLoading(false);
     } catch (error) {
       setErrors('Failed to fetch countries list. See console for more details');
       console.error('Error fetching countries data:', error);
+      setCountriesLoading(false);
     }
   };
 
   const fetchCountry = async (id: string) => {
+    setCountryLoading(true);
     try {
       const dataFields =
         '?fields=name,flags,population,cca2,country,currencies,capital,unMember,languages,landlocked,maps';
       const all = `${baseUrl}/name/${id}${dataFields}`;
       const response = await fetch(all);
       if (response.ok) {
-        const data: countryFieldsExtra[] = await response.json();
+        const data: CountryFieldsExtra[] = await response.json();
         setCountry(() => data[0]);
       } else {
         console.error(
@@ -56,13 +61,23 @@ const useCountries = ({ baseUrl, favoriteIds }: CountryProps) => {
           response.status
         );
       }
+      setCountryLoading(false);
     } catch (error) {
+      setCountryLoading(false);
       setErrors('Failed to fetch country item. See console for more details');
       console.error('Error fetching country data:', error);
     }
   };
 
-  return { fetchCountries, countries, country, errors, fetchCountry };
+  return {
+    fetchCountries,
+    countries,
+    country,
+    errors,
+    fetchCountry,
+    countriesLoading,
+    countryLoading,
+  };
 };
 
 export default useCountries;

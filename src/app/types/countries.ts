@@ -17,7 +17,7 @@ type flags = {
   alt: string;
 };
 
-export type countryFields = {
+export interface CountryFields {
   id: string;
   flags: flags;
   name: name;
@@ -27,7 +27,7 @@ export type countryFields = {
   country: string;
   currencies: currencies;
   isFavorite?: boolean;
-};
+}
 
 type currencies = {
   [key: string]: {
@@ -36,7 +36,7 @@ type currencies = {
   };
 };
 
-export interface CountryFieldsExtra extends countryFields {
+export interface CountryFieldsExtra extends CountryFields {
   unMember: string;
   languages: { string: string };
   landlocked: boolean;

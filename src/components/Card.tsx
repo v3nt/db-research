@@ -24,60 +24,9 @@ const Card = ({ data, open = true, loading = false }: CardProps) => {
   return (
     <>
       {show && (
-        <div className='Card col-span-2 xl:col-span-1'>
-          <div className='relative flex justify-end px-4 pt-4'>
-            <button
-              id='card-menu'
-              className='CardDropdownButton rounded-lg p-1.5 text-sm text-gray-500 hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-700'
-              type='button'
-              aria-label='Card menu'
-              aria-haspopup='true'
-            >
-              <span className='sr-only'>Open dropdown</span>
-              <svg
-                className='h-5 w-5'
-                aria-hidden='true'
-                xmlns='http://www.w3.org/2000/svg'
-                fill='currentColor'
-                viewBox='0 0 16 3'
-              >
-                <path d='M2 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm6.041 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM14 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Z' />
-              </svg>
-            </button>
-            <div
-              role='menu'
-              id='card-menu-dropdown'
-              className='top-4 z-10 hidden w-32 list-none divide-y divide-gray-100 rounded-lg bg-white text-base shadow dark:bg-gray-700'
-            >
-              <ul className='py-2' aria-labelledby='dropdownButton'>
-                <li>
-                  <button
-                    onMouseDown={() => handleClose()}
-                    className='block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-600 dark:hover:text-white'
-                  >
-                    Close
-                  </button>
-                </li>
-                <li>
-                  <a
-                    href='#'
-                    className='block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-600 dark:hover:text-white'
-                  >
-                    Remove
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href='#'
-                    className='block px-4 py-2 text-sm text-red-600 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-600 dark:hover:text-white'
-                  >
-                    Favorite
-                  </a>
-                </li>
-              </ul>
-            </div>
-          </div>
-          <div className='flex flex-col items-center pb-5'>
+        // TODO: make card more generic & dumb
+        <div className='Card'>
+          <div className='flex flex-col items-center py-5'>
             <div className='relative h-24 w-24 overflow-hidden rounded-full'>
               <Image
                 width={120}

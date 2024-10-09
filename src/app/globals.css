@@ -46,3 +46,7 @@ dt {
 dd a {
   @apply break-all;
 }
+
+li button:hover {
+  @apply text-primary-500 dark:text-primary-300;
+}

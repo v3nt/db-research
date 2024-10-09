@@ -11,7 +11,7 @@ import { useEffect, useState } from 'react';
 import useCountries from './hooks/useCountries';
 import useSearch from './hooks/useSearch';
 import Input from '@/components/Input';
-import { countryFields } from './types/countries';
+import { CountryFields } from './types/countries';
 import useFilters from './hooks/useFilters';
 import InputSelect from '@/components/InputSelect';
 import ButtonFavorite from '@/components/ButtonFavourite';
@@ -31,21 +31,15 @@ export default function Home() {
 
   // states
   const [colDefs, setColDefs] = useState<ColDef[] | undefined>();
-  const [tableData, setTableData] = useState<countryFields[]>([]);
+  const [tableData, setTableData] = useState<CountryFields[]>([]);
 
   // hooks
-  const {
-    favorites,
-    addFavorite,
-    removeFavorite,
-    isInArray,
-    listMyFavorites,
-    favoriteItems,
-  } = useFavorites();
-  const { countries, country, fetchCountries, fetchCountry } = useCountries({
-    baseUrl,
-    favoriteIds: favorites,
-  });
+  const { favorites, addFavorite, removeFavorite, isInArray, listMyFavorites } =
+    useFavorites();
+  const { countries, country, fetchCountries, fetchCountry, countriesLoading } =
+    useCountries({
+      baseUrl,
+    });
   const { currencies } = useFilters({
     data: countries,
     updateWithDataChange: false,
@@ -119,7 +113,7 @@ export default function Home() {
       },
       {
         field: 'flags',
-        width: 100,
+        width: 90,
         valueGetter: (params) => {
           return params.data.flags.png;
         },
@@ -135,7 +129,7 @@ export default function Home() {
           </div>
         ),
       },
-      { field: 'population', suppressSizeToFit: true },
+      { field: 'population', width: 120 },
       { field: 'cca2', width: 80 },
       {
         field: 'currencies',
@@ -149,7 +143,7 @@ export default function Home() {
 
     // on initial render only
     fetchCountries();
-    fetchCountry('eesti');
+    // fetchCountry('eesti');
     setTableData(countries);
   }, []);
 
@@ -173,7 +167,6 @@ export default function Home() {
   const handleFilterChange = (value: string) => {
     filterDataByCurrency(value, countries);
   };
-
   const handelShowFavorites = () => {
     setTableData(listMyFavorites(countries));
   };
@@ -190,39 +183,54 @@ export default function Home() {
         onShowAll={handelShowCountries}
       />
       <div className='w-full py-4'>
-        <form onSubmit={handleSubmit} className='grid grid-cols-2 gap-6'>
-          <Input
-            name='my-input'
-            label='Search'
-            onChange={handleSearch}
-            placeholder='Search by name'
-          />
-          <InputSelect
-            name='filterCurrencies'
-            label='Currencies'
-            instructions='Choose a currency...'
-            options={currencies}
-            onChange={(e) => handleFilterChange(e.currentTarget.value)}
-          />
-        </form>
-      </div>
-
-      <div className='grid grid-cols-5 gap-6'>
-        {country && <Card data={country} open={true} loading={false} />}
-        {tableData && (
-          <div
-            className='ag-theme-quartz ag-theme-quartz-dark col-span-3 xl:col-span-4'
-            style={{ height: 518 }}
-          >
-            <AgGridReact
-              pagination={pagination}
-              paginationPageSize={paginationPageSize}
-              paginationPageSizeSelector={paginationPageSizeSelector}
-              rowData={tableData}
-              columnDefs={colDefs}
+        {/* TODO: move to form component */}
+        <form onSubmit={handleSubmit} className='grid grid-cols-5 gap-6'>
+          <div className='col-span-2 xl:col-span-1'>
+            <Input
+              name='my-input'
+              label='Search'
+              onChange={handleSearch}
+              placeholder='Search by name'
             />
           </div>
-        )}
+          <div className='col-span-2 xl:col-span-1'>
+            <InputSelect
+              name='filterCurrencies'
+              label='Currencies'
+              instructions='Choose a currency...'
+              options={currencies}
+              onChange={(e) => handleFilterChange(e.currentTarget.value)}
+            />
+          </div>
+          <div className='col-span-1'>clear filters</div>
+        </form>
+      </div>
+      <div className='grid grid-cols-5 gap-6'>
+        <div className='col-span-2 xl:col-span-1'>
+          {countriesLoading && <div>Loading...</div>}
+          {country && <Card data={country} open={true} loading={false} />}
+          {!country && (
+            <div>
+              <p>Select a country from the table to view its details</p>
+            </div>
+          )}
+        </div>
+
+        <div
+          className='ag-theme-quartz ag-theme-quartz-dark col-span-3 xl:col-span-4'
+          style={{ height: 518 }}
+        >
+          {countriesLoading && <div>Loading...</div>}
+
+          <AgGridReact
+            loading={countriesLoading}
+            pagination={pagination}
+            paginationPageSize={paginationPageSize}
+            paginationPageSizeSelector={paginationPageSizeSelector}
+            rowData={tableData}
+            columnDefs={colDefs}
+          />
+        </div>
       </div>
     </>
   );

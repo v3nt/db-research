@@ -14,7 +14,7 @@ const Input: FC<InputProps> = ({
   value,
 }) => {
   return (
-    <div className='light mb-2'>
+    <div>
       <label htmlFor={`${name}`} className='Label'>
         {label}
       </label>
