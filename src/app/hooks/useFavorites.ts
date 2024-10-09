@@ -29,19 +29,19 @@ const useFavorites = () => {
     localStorage.setItem('myFavorites', JSON.stringify(myFavorites));
   };
 
-  const localValueFavorites = localStorage.getItem('myFavorites');
-  const localValueFavoritesParsed =
-    localValueFavorites != null ? JSON?.parse(localValueFavorites) : [];
-  if (
-    localValueFavoritesParsed &&
-    localValueFavoritesParsed.length &&
-    !myFavorites.length
-  ) {
-    localValueFavoritesParsed?.map((id) => myFavorites.push(id));
-    console.log('myFavorites', myFavorites);
-    //
-  }
   useEffect(() => {
+    const localValueFavorites = localStorage.getItem('myFavorites');
+    const localValueFavoritesParsed =
+      localValueFavorites != null ? JSON?.parse(localValueFavorites) : [];
+    if (
+      localValueFavoritesParsed &&
+      localValueFavoritesParsed.length &&
+      !myFavorites.length
+    ) {
+      localValueFavoritesParsed?.map((id) => myFavorites.push(id));
+      console.log('myFavorites', myFavorites);
+    }
+
     setFavorites((prev) => [...myFavorites]);
   }, []);
 
