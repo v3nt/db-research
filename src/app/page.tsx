@@ -106,8 +106,8 @@ export default function Home() {
           <Image
             src={data?.flags.png}
             alt='country flag'
-            width={64}
-            height={38}
+            width={32}
+            height={19}
           />
         ),
       },

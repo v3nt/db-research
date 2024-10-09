@@ -1,15 +1,7 @@
 import { useEffect, useState } from 'react';
-
-// interface FavoriteProps {}
-
-// add country ID to array
 type Favorites = string[];
 
 const useFavorites = () => {
-  //  update from local storage if empty
-
-  console.log('useFavorites favoritesStartingPoint');
-
   const [favorites, setFavorites] = useState<Favorites>([]);
   const myFavorites: Favorites = [];
 
@@ -22,6 +14,7 @@ const useFavorites = () => {
     if (!isInArray(id)) {
       myFavorites.push(id);
       setFavorites((prev) => [...myFavorites]);
+      updateLocalStorage();
     }
   };
 
@@ -29,16 +22,28 @@ const useFavorites = () => {
     const index = myFavorites.indexOf(id);
     myFavorites.splice(index, 1);
     setFavorites((prev) => [...myFavorites]);
+    updateLocalStorage();
   };
 
-  // const localValueFavorites = localStorage.getItem('favorites');
-  useEffect(() => {
-    // localStorage.setItem('favorites', JSON.stringify(favorites));
-  }, [favorites]);
+  const updateLocalStorage = () => {
+    localStorage.setItem('myFavorites', JSON.stringify(myFavorites));
+  };
 
-  // const favoritesStartingPoint = localValueFavorites
-  //   ? JSON?.parse(localValueFavorites)
-  //   : '';
+  const localValueFavorites = localStorage.getItem('myFavorites');
+  const localValueFavoritesParsed =
+    localValueFavorites != null ? JSON?.parse(localValueFavorites) : [];
+  if (
+    localValueFavoritesParsed &&
+    localValueFavoritesParsed.length &&
+    !myFavorites.length
+  ) {
+    localValueFavoritesParsed?.map((id) => myFavorites.push(id));
+    console.log('myFavorites', myFavorites);
+    //
+  }
+  useEffect(() => {
+    setFavorites((prev) => [...myFavorites]);
+  }, []);
 
   return {
     isInArray,
