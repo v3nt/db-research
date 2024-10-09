@@ -15,50 +15,32 @@ import { countryFields } from './types/countries';
 import useFilters from './hooks/useFilters';
 import InputSelect from '@/components/InputSelect';
 import ButtonFavorite from '@/components/ButtonFavourite';
-// import useFavorites from './hooks/useFavorites';
+import useFavorites from './hooks/useFavorites';
 
 export default function Home() {
   const baseUrl = process.env.NEXT_PUBLIC_COUNTRIES_BASE_URL;
 
+  // AG GRID
   const pagination = true;
   // sets 10 rows per page (default is 100)
   const paginationPageSize = 10;
   // allows the user to select the page size from a predefined list of page sizes
-  const paginationPageSizeSelector = [10, 20, 50, 100];
+  const paginationPageSizeSelector = [10, 50, 100];
 
+  // states
   const [colDefs, setColDefs] = useState<ColDef[] | undefined>();
   const [tableData, setTableData] = useState<countryFields[]>([]);
 
-  const { countries, fetchCountries, fetchCountry } = useCountries({ baseUrl });
-  // const { favorites, setFavorites, toggleAsFavorite } = useFavorites();
-  type Favorites = string[];
-
-  const [favorites, setFavorites] = useState<Favorites>([]);
-  const myFavorites: Favorites = [];
-
+  // hooks
+  const { favorites, addFavorite, removeFavorite, isInArray } = useFavorites();
+  const { countries, fetchCountries, fetchCountry } = useCountries({
+    baseUrl,
+    favoriteIds: favorites,
+  });
   const { currencies } = useFilters({
     data: countries,
     updateWithDataChange: false,
   });
-
-  const isInArray = (array, value) => {
-    const index = array.indexOf(value);
-
-    return index != -1 ? true : false;
-  };
-
-  const addFavorite = async (id: string) => {
-    if (!isInArray(myFavorites, id)) {
-      myFavorites.push(id);
-      setFavorites((prev) => [...myFavorites]);
-    }
-  };
-
-  const removeFavorite = (id: string) => {
-    const index = myFavorites.indexOf(id);
-    myFavorites.splice(index, 1);
-    setFavorites((prev) => [...myFavorites]);
-  };
 
   const {
     searchDataByString,
@@ -68,24 +50,47 @@ export default function Home() {
     filterDataByCurrency,
   } = useSearch();
 
+  // setup table, fetch countries
   useEffect(() => {
     setColDefs([
       {
         field: 'Favorite',
-        cellRenderer: ({ data }) => (
-          <div>
-            <ButtonFavorite
-              onClick={() => addFavorite(data?.id)}
-              label='Save'
-              icon='FAV'
-            />
-            <ButtonFavorite
-              onClick={() => removeFavorite(data?.id)}
-              label='Rem'
-              icon='FAV'
-            />
-          </div>
-        ),
+        width: 100,
+        cellRenderer: (params) => {
+          // TODO: should be a component
+          const [isFavorite, setIsFavorite] = useState(
+            isInArray(params.data?.id) ? true : params.data?.isFavorite
+          );
+
+          const cellHandler = (action: string | null) => {
+            if (action) {
+              addFavorite(params.data?.id);
+              setIsFavorite(true);
+              return;
+            }
+            removeFavorite(params.data?.id);
+            setIsFavorite(false);
+          };
+
+          return (
+            <div>
+              {!isFavorite && (
+                <ButtonFavorite
+                  onClick={() => cellHandler('add')}
+                  label='Add'
+                  icon=''
+                />
+              )}
+              {isFavorite && (
+                <ButtonFavorite
+                  onClick={() => cellHandler(null)}
+                  label='Rem'
+                  icon=''
+                />
+              )}
+            </div>
+          );
+        },
       },
       {
         field: 'name',
@@ -93,6 +98,7 @@ export default function Home() {
       },
       {
         field: 'flags',
+        width: 100,
         valueGetter: (params) => {
           return params.data.flags.png;
         },
@@ -106,7 +112,7 @@ export default function Home() {
         ),
       },
       { field: 'population' },
-      { field: 'cca2' },
+      { field: 'cca2', width: 80 },
       {
         field: 'currencies',
         valueGetter: (params: any | unknown) => {
@@ -116,6 +122,8 @@ export default function Home() {
       },
       { field: 'capital' },
     ]);
+
+    // on initial render only
     fetchCountries();
     fetchCountry('eesti');
     setTableData(countries);
@@ -129,7 +137,10 @@ export default function Home() {
     setTableData(results);
   }, [results]);
 
-  // Set the value received from the local storage to a local state
+  useEffect(() => {
+    searchDataByString(searchTerm, countries);
+  }, [searchTerm]);
+
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
   };
@@ -138,14 +149,12 @@ export default function Home() {
     filterDataByCurrency(value, countries);
   };
 
-  useEffect(() => {
-    searchDataByString(searchTerm, countries);
-  }, [searchTerm]);
-
   return (
     <>
       <div className='w-full py-4'>
-        <p>{favorites}</p>
+        <p>
+          favorites: {favorites.length} {favorites}
+        </p>
         <form onSubmit={handleSubmit}>
           <Input
             name='my-input'
@@ -160,13 +169,6 @@ export default function Home() {
             options={currencies}
             onChange={(e) => handleFilterChange(e.currentTarget.value)}
           />
-          <button
-            type='submit'
-            value='Save'
-            className='mb-2 me-2 rounded-lg bg-primary-700 px-5 py-2.5 text-sm font-medium text-white hover:bg-primary-800 focus:outline-none focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800'
-          >
-            Default
-          </button>
         </form>
       </div>
 

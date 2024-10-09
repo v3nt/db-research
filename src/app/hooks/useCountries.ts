@@ -3,13 +3,15 @@ import { countryFields, countryFieldsExtra } from '../types/countries';
 
 interface CountryProps {
   baseUrl: string | undefined;
+  favoriteIds?: string[];
 }
 
-const useCountries = ({ baseUrl }: CountryProps) => {
+const useCountries = ({ baseUrl, favoriteIds }: CountryProps) => {
   const [countries, setCountries] = useState<countryFields[]>([]);
   const [country, setCountry] = useState<countryFieldsExtra[]>([]);
   const [errors, setErrors] = useState<string | undefined>();
 
+  console.log('favoriteIds', favoriteIds);
   const fetchCountries = async () => {
     try {
       const dataFields =
@@ -21,7 +23,11 @@ const useCountries = ({ baseUrl }: CountryProps) => {
         // add ID to array.
         setCountries(() =>
           data.map((country) => {
-            return { ...country, id: country.cca2 };
+            return {
+              ...country,
+              id: country.cca2,
+              isFavorite: false,
+            };
           })
         );
       } else {

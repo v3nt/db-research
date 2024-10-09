@@ -8,27 +8,29 @@ type Favorites = string[];
 const useFavorites = () => {
   //  update from local storage if empty
 
-  // console.log('useFavorites favoritesStartingPoint', favoritesStartingPoint);
+  console.log('useFavorites favoritesStartingPoint');
 
   const [favorites, setFavorites] = useState<Favorites>([]);
+  const myFavorites: Favorites = [];
 
-  const toggleAsFavorite = (id: string): void => {
-    console.log(
-      'toggleAsFavorite',
-      favorites?.find((item) => item === id)?.length,
-      `${id}`
-    );
-    if (favorites && favorites?.find((item) => item === id)?.length) {
-      // removeFavorite(id);
-    } else {
-      // addFavorite(id);
-    }
-    return;
+  const isInArray = (value: string) => {
+    const index = myFavorites.indexOf(value);
+    return index != -1 ? true : false;
   };
 
-  // add to favs
+  const addFavorite = async (id: string) => {
+    if (!isInArray(id)) {
+      myFavorites.push(id);
+      setFavorites((prev) => [...myFavorites]);
+    }
+  };
 
-  // rm from fav
+  const removeFavorite = (id: string) => {
+    const index = myFavorites.indexOf(id);
+    myFavorites.splice(index, 1);
+    setFavorites((prev) => [...myFavorites]);
+  };
+
   // const localValueFavorites = localStorage.getItem('favorites');
   useEffect(() => {
     // localStorage.setItem('favorites', JSON.stringify(favorites));
@@ -39,9 +41,11 @@ const useFavorites = () => {
   //   : '';
 
   return {
+    isInArray,
     favorites,
     setFavorites,
-    toggleAsFavorite,
+    addFavorite,
+    removeFavorite,
   };
 };
 

@@ -8,20 +8,18 @@ export default function Header() {
   return (
     <header className='py-4'>
       <h1>Header</h1>
-      <ul>
+      <ul className='flex space-x-4'>
         <li>LOGO</li>
         <li>
-          Favourites <sup>5</sup>
+          Favorites <sup>5</sup>
         </li>
-
+        <li>All countries</li>
         <li>
-          <div className='flex flex-col'>
-            {session && session.user ? (
-              <button onClick={() => signOut()}>Sign out</button>
-            ) : (
-              <button onClick={() => signIn()}>Sign in</button>
-            )}
-          </div>
+          {session && session.user ? (
+            <button onClick={() => signOut()}>Sign out</button>
+          ) : (
+            <button onClick={() => signIn()}>Sign in</button>
+          )}
         </li>
       </ul>
     </header>
