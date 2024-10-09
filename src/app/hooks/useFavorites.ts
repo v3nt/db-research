@@ -1,29 +1,48 @@
 import { useEffect, useState } from 'react';
 
-interface FavoriteProps {}
+// interface FavoriteProps {}
 
 // add country ID to array
 type Favorites = string[];
 
-const useFavorites = ({}: FavoriteProps) => {
-  const [favorites, setFavorites] = useState<Favorites>([]);
-
+const useFavorites = () => {
   //  update from local storage if empty
 
+  // console.log('useFavorites favoritesStartingPoint', favoritesStartingPoint);
+
+  const [favorites, setFavorites] = useState<Favorites>([]);
+
+  const toggleAsFavorite = (id: string): void => {
+    console.log(
+      'toggleAsFavorite',
+      favorites?.find((item) => item === id)?.length,
+      `${id}`
+    );
+    if (favorites && favorites?.find((item) => item === id)?.length) {
+      // removeFavorite(id);
+    } else {
+      // addFavorite(id);
+    }
+    return;
+  };
+
   // add to favs
-  const addFavorite = (id) => {
-    setFavorites((old) => [...old, id]);
-    console.log('addFavorite', favorites, id);
+
+  // rm from fav
+  // const localValueFavorites = localStorage.getItem('favorites');
+  useEffect(() => {
+    // localStorage.setItem('favorites', JSON.stringify(favorites));
+  }, [favorites]);
+
+  // const favoritesStartingPoint = localValueFavorites
+  //   ? JSON?.parse(localValueFavorites)
+  //   : '';
+
+  return {
+    favorites,
+    setFavorites,
+    toggleAsFavorite,
   };
-
-  const removeFavorite = (id) => {
-    setFavorites((old) => old.filter((s, i) => i != id));
-    console.log('removeFavorite', favorites, id);
-  };
-
-  useEffect(() => {}, [favorites]);
-
-  return { favorites, addFavorite, removeFavorite };
 };
 
 export default useFavorites;

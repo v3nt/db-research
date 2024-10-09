@@ -15,7 +15,7 @@ import { countryFields } from './types/countries';
 import useFilters from './hooks/useFilters';
 import InputSelect from '@/components/InputSelect';
 import ButtonFavorite from '@/components/ButtonFavourite';
-import useFavorites from './hooks/useFavorites';
+// import useFavorites from './hooks/useFavorites';
 
 export default function Home() {
   const baseUrl = process.env.NEXT_PUBLIC_COUNTRIES_BASE_URL;
@@ -30,12 +30,35 @@ export default function Home() {
   const [tableData, setTableData] = useState<countryFields[]>([]);
 
   const { countries, fetchCountries, fetchCountry } = useCountries({ baseUrl });
-  const { favorites } = useFavorites({});
+  // const { favorites, setFavorites, toggleAsFavorite } = useFavorites();
+  type Favorites = string[];
+
+  const [favorites, setFavorites] = useState<Favorites>([]);
+  const myFavorites: Favorites = [];
 
   const { currencies } = useFilters({
     data: countries,
     updateWithDataChange: false,
   });
+
+  const isInArray = (array, value) => {
+    const index = array.indexOf(value);
+
+    return index != -1 ? true : false;
+  };
+
+  const addFavorite = async (id: string) => {
+    if (!isInArray(myFavorites, id)) {
+      myFavorites.push(id);
+      setFavorites((prev) => [...myFavorites]);
+    }
+  };
+
+  const removeFavorite = (id: string) => {
+    const index = myFavorites.indexOf(id);
+    myFavorites.splice(index, 1);
+    setFavorites((prev) => [...myFavorites]);
+  };
 
   const {
     searchDataByString,
@@ -49,14 +72,20 @@ export default function Home() {
     setColDefs([
       {
         field: 'Favorite',
-        cellRenderer: ButtonFavorite,
-        cellRendererParams: {
-          onClick: (event) => console.log(event),
-          label: 'Save ',
-          icon: 'FAV',
-        },
-        // onCellClicked: (event: CellClickedEvent) =>
-        //   console.log('Cell was clicked', event.data, event),
+        cellRenderer: ({ data }) => (
+          <div>
+            <ButtonFavorite
+              onClick={() => addFavorite(data?.id)}
+              label='Save'
+              icon='FAV'
+            />
+            <ButtonFavorite
+              onClick={() => removeFavorite(data?.id)}
+              label='Rem'
+              icon='FAV'
+            />
+          </div>
+        ),
       },
       {
         field: 'name',
@@ -94,28 +123,15 @@ export default function Home() {
 
   useEffect(() => {
     setTableData(countries);
-    console.log(countries);
   }, [countries]);
 
   useEffect(() => {
     setTableData(results);
   }, [results]);
 
-  const [favoriteNumber, setFavoriteNumber] = useState<string | undefined>();
-
-  // local storage
-  // TODO: configure with favs
-  useEffect(() => {
-    let localValue;
-    localValue = localStorage.getItem('favoriteNumber') || '';
-    setFavoriteNumber(localValue);
-  }, []);
-
   // Set the value received from the local storage to a local state
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    localStorage.setItem('favoriteNumber', favoriteNumber ?? '');
-    console.log('handleSubmit', localStorage.getItem('favoriteNumber'));
   };
 
   const handleFilterChange = (value: string) => {
@@ -129,18 +145,7 @@ export default function Home() {
   return (
     <>
       <div className='w-full py-4'>
-        {/* <form onSubmit={handleSubmit}>
-          <input
-            id="number"
-            value={favoriteNumber || ""}
-            onChange={(e) => setFavoriteNumber(e.target.value)}
-            className="rounded-lg block mb-2 font-medium text-gray-900 dark:text-gray-900 px-5 py-2.5"
-          />
-          <button type="submit" value="Save" className="text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800" >
-            Default
-          </button>
-        </form> */}
-
+        <p>{favorites}</p>
         <form onSubmit={handleSubmit}>
           <Input
             name='my-input'
