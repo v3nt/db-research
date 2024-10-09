@@ -12,7 +12,6 @@ const Input: FC<InputProps> = ({
   label,
   onChange,
   value,
-  ...rest
 }) => {
   return (
     <div className='light mb-2'>

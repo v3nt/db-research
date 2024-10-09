@@ -8,10 +8,8 @@ interface CountryProps {
 
 const useCountries = ({ baseUrl, favoriteIds }: CountryProps) => {
   const [countries, setCountries] = useState<countryFields[]>([]);
-  const [country, setCountry] = useState<countryFieldsExtra[]>([]);
+  const [country, setCountry] = useState<countryFieldsExtra>();
   const [errors, setErrors] = useState<string | undefined>();
-
-  console.log('favoriteIds', favoriteIds);
 
   const fetchCountries = async () => {
     try {
@@ -51,7 +49,7 @@ const useCountries = ({ baseUrl, favoriteIds }: CountryProps) => {
       const response = await fetch(all);
       if (response.ok) {
         const data: countryFieldsExtra[] = await response.json();
-        setCountry(data);
+        setCountry(() => data[0]);
       } else {
         console.error(
           'Promise resolved but HTTP status failed',
