@@ -30,6 +30,7 @@ const useFavorites = () => {
   };
 
   useEffect(() => {
+    // a lot of checks to ensure local storage is used once at the beginning of the session.
     const localValueFavorites = localStorage.getItem('myFavorites');
     const localValueFavoritesParsed =
       localValueFavorites != null ? JSON?.parse(localValueFavorites) : [];

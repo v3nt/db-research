@@ -29,15 +29,14 @@ const useSearch = () => {
     currencyValue: string,
     data: countryFields[]
   ) => {
-    // TODO: refine types
     const filteredData = data.filter(
       (item) => currencyValue in item.currencies
     );
 
-    console.log('filterDataByCurrency', currencyValue, filteredData.length);
     if (filteredData.length > 0) {
       setResults(filteredData);
     }
+
     if (currencyValue?.length === 0) {
       setResults(data);
       setResultsMessage('No matching results');

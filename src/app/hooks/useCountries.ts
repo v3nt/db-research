@@ -12,6 +12,7 @@ const useCountries = ({ baseUrl, favoriteIds }: CountryProps) => {
   const [errors, setErrors] = useState<string | undefined>();
 
   console.log('favoriteIds', favoriteIds);
+
   const fetchCountries = async () => {
     try {
       const dataFields =
@@ -20,7 +21,7 @@ const useCountries = ({ baseUrl, favoriteIds }: CountryProps) => {
       const response = await fetch(all);
       if (response.ok) {
         const data: countryFields[] = await response.json();
-        // add ID to array.
+        // add ID & favorite true|false to array.
         setCountries(() =>
           data.map((country) => {
             return {

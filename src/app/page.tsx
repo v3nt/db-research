@@ -135,13 +135,14 @@ export default function Home() {
 
   useEffect(() => {
     setTableData(results);
-  }, [results]);
+  }, []);
 
   useEffect(() => {
     searchDataByString(searchTerm, countries);
   }, [searchTerm]);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    // no form submit needed
     e.preventDefault();
   };
 
@@ -156,6 +157,11 @@ export default function Home() {
           favorites: {favorites.length} {favorites}
         </p>
         <form onSubmit={handleSubmit}>
+          <input
+            type='text'
+            className='Input'
+            onChange={() => console.log(1)}
+          />
           <Input
             name='my-input'
             label='Search'
