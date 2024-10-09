@@ -1,19 +1,35 @@
 'use client';
 import { useSession, signIn, signOut } from 'next-auth/react';
+import { FC } from 'react';
 
-export default function Header() {
+interface HeaderProps {
+  onShowFavorites: React.MouseEventHandler<HTMLButtonElement>;
+  favoriteTotal: number;
+  countriesTotal: number;
+  onShowAll: React.MouseEventHandler<HTMLButtonElement>;
+}
+const Header: FC<HeaderProps> = ({
+  onShowFavorites,
+  favoriteTotal,
+  countriesTotal,
+  onShowAll,
+}) => {
   const { data: session } = useSession();
-  console.log('session', session);
 
   return (
     <header className='py-4'>
-      <h1>Header</h1>
       <ul className='flex space-x-4'>
         <li>LOGO</li>
         <li>
-          Favorites <sup>5</sup>
+          <button onClick={(e) => onShowFavorites(e)}>
+            My Favorites <sup>{favoriteTotal}</sup>
+          </button>
         </li>
-        <li>All countries</li>
+        <li>
+          <button onClick={(e) => onShowAll(e)}>
+            List all countries <sup>{countriesTotal}</sup>
+          </button>
+        </li>
         <li>
           {session && session.user ? (
             <button onClick={() => signOut()}>Sign out</button>
@@ -24,4 +40,6 @@ export default function Header() {
       </ul>
     </header>
   );
-}
+};
+
+export default Header;

@@ -20,7 +20,7 @@ const InputSelect: FC<InputProps> = ({
   return (
     <div className='light mb-2'>
       <label htmlFor={`${name}`} className='Label'>
-        {label}
+        {label} ({options?.length && options?.length})
       </label>
 
       <select
@@ -34,7 +34,7 @@ const InputSelect: FC<InputProps> = ({
           options.map((item: InputSelectList, index: number) => {
             return (
               <option value={item?.value} key={index}>
-                {item?.label}
+                {item?.label}, {item?.value}
               </option>
             );
           })}

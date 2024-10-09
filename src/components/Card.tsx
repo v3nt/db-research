@@ -12,7 +12,6 @@ interface CardProps {
 
 const Card = ({ data, open = true, loading = false }: CardProps) => {
   const [show, setShow] = useState<boolean>(open);
-  const handleShow = () => setShow(true);
   const handleClose = () => {
     setShow(false);
   };
@@ -21,6 +20,7 @@ const Card = ({ data, open = true, loading = false }: CardProps) => {
     setShow(open);
   }, [data]);
 
+  // TODO: move css to css file
   return (
     <>
       {show && (

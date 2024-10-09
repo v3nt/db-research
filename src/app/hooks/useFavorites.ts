@@ -1,8 +1,12 @@
 import { useEffect, useState } from 'react';
+import { countryFields } from '../types/countries';
 type Favorites = string[];
 
 const useFavorites = () => {
   const [favorites, setFavorites] = useState<Favorites>([]);
+
+  const [favoriteItems, setFavoriteItems] = useState<countryFields[]>([]);
+
   const myFavorites: Favorites = [];
 
   const isInArray = (value: string) => {
@@ -13,7 +17,7 @@ const useFavorites = () => {
   const addFavorite = async (id: string) => {
     if (!isInArray(id)) {
       myFavorites.push(id);
-      setFavorites((prev) => [...myFavorites]);
+      setFavorites(() => [...myFavorites]);
       updateLocalStorage();
     }
   };
@@ -21,7 +25,7 @@ const useFavorites = () => {
   const removeFavorite = (id: string) => {
     const index = myFavorites.indexOf(id);
     myFavorites.splice(index, 1);
-    setFavorites((prev) => [...myFavorites]);
+    setFavorites(() => [...myFavorites]);
     updateLocalStorage();
   };
 
@@ -39,19 +43,29 @@ const useFavorites = () => {
       localValueFavoritesParsed.length &&
       !myFavorites.length
     ) {
-      localValueFavoritesParsed?.map((id) => myFavorites.push(id));
-      console.log('myFavorites', myFavorites);
+      localValueFavoritesParsed?.map((id: string) => myFavorites.push(id));
     }
-
-    setFavorites((prev) => [...myFavorites]);
+    setFavorites(() => [...myFavorites]);
   }, []);
+
+  const listMyFavorites = (items: countryFields[]) => {
+    const myFavoritesDetails = favorites.map((id: string) => {
+      return items.filter((item) => item.id === id)[0];
+    });
+    console.log(myFavoritesDetails);
+    setFavoriteItems(myFavoritesDetails);
+
+    return myFavoritesDetails;
+  };
 
   return {
     isInArray,
     favorites,
+    favoriteItems,
     setFavorites,
     addFavorite,
     removeFavorite,
+    listMyFavorites,
   };
 };
 

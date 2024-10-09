@@ -17,6 +17,7 @@ import InputSelect from '@/components/InputSelect';
 import ButtonFavorite from '@/components/ButtonFavourite';
 import useFavorites from './hooks/useFavorites';
 import Card from '@/components/Card';
+import Header from '@/components/Header';
 
 export default function Home() {
   const baseUrl = process.env.NEXT_PUBLIC_COUNTRIES_BASE_URL;
@@ -33,7 +34,14 @@ export default function Home() {
   const [tableData, setTableData] = useState<countryFields[]>([]);
 
   // hooks
-  const { favorites, addFavorite, removeFavorite, isInArray } = useFavorites();
+  const {
+    favorites,
+    addFavorite,
+    removeFavorite,
+    isInArray,
+    listMyFavorites,
+    favoriteItems,
+  } = useFavorites();
   const { countries, country, fetchCountries, fetchCountry } = useCountries({
     baseUrl,
     favoriteIds: favorites,
@@ -166,13 +174,23 @@ export default function Home() {
     filterDataByCurrency(value, countries);
   };
 
+  const handelShowFavorites = () => {
+    setTableData(listMyFavorites(countries));
+  };
+  const handelShowCountries = () => {
+    setTableData(countries);
+  };
+
   return (
     <>
+      <Header
+        onShowFavorites={handelShowFavorites}
+        favoriteTotal={favorites.length}
+        countriesTotal={countries.length}
+        onShowAll={handelShowCountries}
+      />
       <div className='w-full py-4'>
-        <p>
-          favorites: {favorites.length} {favorites}
-        </p>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} className='grid grid-cols-2 gap-6'>
           <Input
             name='my-input'
             label='Search'
