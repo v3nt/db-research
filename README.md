@@ -1,14 +1,24 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
-
-## Getting Started
-
-
-
+# Tech test with AG Grid and countries API.
 
 The project is deployed here — 
 https://db-research.vercel.app/
 
-You will need a `.env.local` file with 
+Repo is here 
+https://github.com/v3nt/db-research (public)
+
+## Notes about the work
+- built with react (Nextjs)
+- Typed
+- I used Tailwind for styling
+- TODOs where improvements could be made with more time
+- I manually created a filter for currencies insread of just using all of AG Grid's features
+- Design is basic and i see as more of a working Wireframe
+
+
+
+## Getting Started if you want to run locally
+
+You will need a `.env.local` file with —
 
 ```
 NEXT_PUBLIC_COUNTRIES_BASE_URL=https://restcountries.com/v3.1
@@ -20,7 +30,7 @@ GITHUB_CLIENT_SECRET=
 NEXTAUTH_URL=
 NEXTAUTH_SECRET=
 ```
-
+(You will need app IDs & secrets)
 
 
 First, run the development server:
