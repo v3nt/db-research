@@ -26,6 +26,7 @@ export type countryFields = {
   population: number;
   country: string;
   currencies: currencies;
+  isFavorite?: boolean;
 };
 
 type currencies = {
@@ -35,7 +36,7 @@ type currencies = {
   };
 };
 
-export interface countryFieldsExtra extends countryFields {
+export interface CountryFieldsExtra extends countryFields {
   unMember: string;
   languages: { string: string };
   landlocked: boolean;

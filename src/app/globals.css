@@ -26,3 +26,16 @@ body {
     text-wrap: balance;
   }
 }
+
+/* TODO: create more atomical components */
+/* Applying CSS to element to save time */
+h1 {
+  @apply flex items-center text-4xl font-extrabold dark:text-white;
+}
+
+dl {
+  @apply my-4;
+}
+dt {
+  @apply mb-1 mt-3 text-sm font-bold uppercase;
+}

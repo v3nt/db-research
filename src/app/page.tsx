@@ -16,6 +16,7 @@ import useFilters from './hooks/useFilters';
 import InputSelect from '@/components/InputSelect';
 import ButtonFavorite from '@/components/ButtonFavourite';
 import useFavorites from './hooks/useFavorites';
+import Card from '@/components/Card';
 
 export default function Home() {
   const baseUrl = process.env.NEXT_PUBLIC_COUNTRIES_BASE_URL;
@@ -150,7 +151,7 @@ export default function Home() {
 
   useEffect(() => {
     setTableData(results);
-  }, []);
+  }, [results]);
 
   useEffect(() => {
     searchDataByString(searchTerm, countries);
@@ -189,79 +190,10 @@ export default function Home() {
       </div>
 
       <div className='grid grid-cols-5 gap-6'>
-        {country && (
-          <div className='Card col-span-2 rounded-lg border border-gray-200 bg-white p-6 shadow hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700'>
-            <div className='flex justify-end px-4 pt-4'>
-              <button
-                id='dropdownButton'
-                data-dropdown-toggle='dropdown'
-                className='inline-block rounded-lg p-1.5 text-sm text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-700'
-                type='button'
-              >
-                <span className='sr-only'>Open dropdown</span>
-                <svg
-                  className='h-5 w-5'
-                  aria-hidden='true'
-                  xmlns='http://www.w3.org/2000/svg'
-                  fill='currentColor'
-                  viewBox='0 0 16 3'
-                >
-                  <path d='M2 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm6.041 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM14 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Z' />
-                </svg>
-              </button>
-
-              <div
-                id='dropdown'
-                className='z-10 hidden w-44 list-none divide-y divide-gray-100 rounded-lg bg-white text-base shadow dark:bg-gray-700'
-              >
-                <ul className='py-2' aria-labelledby='dropdownButton'>
-                  <li>
-                    <a
-                      href='#'
-                      className='block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-600 dark:hover:text-white'
-                    >
-                      Close
-                    </a>
-                  </li>
-                  <li>
-                    <a
-                      href='#'
-                      className='block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-600 dark:hover:text-white'
-                    >
-                      remove from favorites
-                    </a>
-                  </li>
-                  <li>
-                    <a
-                      href='#'
-                      className='block px-4 py-2 text-sm text-red-600 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-600 dark:hover:text-white'
-                    >
-                      Favorite
-                    </a>
-                  </li>
-                </ul>
-              </div>
-            </div>
-            <div className='flex flex-col items-center pb-10'>
-              <img
-                className='mb-3 h-24 w-24 rounded-full shadow-lg'
-                src='https://flowbite.com/docs/images/people/profile-picture-3.jpg'
-                alt='Bonnie image'
-              />
-            </div>
-            <p>{country.name.common}</p>
-            <div>
-              * name, * flag * basic information like * population, *
-              language(s) * currency/currencies. country, currency,
-              capital,population. unMember, altSpellings, languages,
-              landlocked,maps
-            </div>
-          </div>
-        )}
-
+        {country && <Card data={country} open={true} loading={false} />}
         {tableData && (
           <div
-            className='ag-theme-quartz ag-theme-quartz-dark col-span-3'
+            className='ag-theme-quartz ag-theme-quartz-dark col-span-3 xl:col-span-4'
             style={{ height: 518 }}
           >
             <AgGridReact

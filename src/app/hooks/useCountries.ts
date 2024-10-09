@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { countryFields, countryFieldsExtra } from '../types/countries';
+import { countryFields, CountryFieldsExtra } from '../types/countries';
 
 interface CountryProps {
   baseUrl: string | undefined;
@@ -8,7 +8,7 @@ interface CountryProps {
 
 const useCountries = ({ baseUrl, favoriteIds }: CountryProps) => {
   const [countries, setCountries] = useState<countryFields[]>([]);
-  const [country, setCountry] = useState<countryFieldsExtra>();
+  const [country, setCountry] = useState<CountryFieldsExtra>();
   const [errors, setErrors] = useState<string | undefined>();
 
   const fetchCountries = async () => {
