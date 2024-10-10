@@ -23,7 +23,7 @@ const useFilters = ({
       ? data
           .map((item) => {
             const keyName = Object.keys(item.currencies)[0];
-            if (keyName) {
+            if (keyName && item.currencies[keyName]?.name !== '') {
               return { label: item.currencies[keyName]?.name, value: keyName };
             }
           })

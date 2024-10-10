@@ -32,11 +32,13 @@ const InputSelect: FC<InputProps> = ({
         <option value=''>{instructions}</option>
         {options?.length &&
           options.map((item: InputSelectList, index: number) => {
-            return (
-              <option value={item?.value} key={index}>
-                {item?.label}, {item?.value}
-              </option>
-            );
+            if ((item && item.label !== '') || (item && item.value !== '')) {
+              return (
+                <option value={item?.value} key={`${index}-${item?.value}`}>
+                  {item?.label} {item?.value}
+                </option>
+              );
+            }
           })}
       </select>
     </div>

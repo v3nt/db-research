@@ -21,17 +21,14 @@ const Header: FC<HeaderProps> = ({
       <ul className='flex space-x-4'>
         <li>
           <svg
-            viewBox='0 0 1024 1024'
-            version='1.1'
+            height='30'
+            width='30'
             xmlns='http://www.w3.org/2000/svg'
+            viewBox='1 1 148 148'
           >
             <path
-              d='M224 0h576c123.6 0 224 100.4 224 224v576c0 123.6-100.4 224-224 224H224c-123.6 0-224-100.4-224-224V224C0 100.4 100.4 0 224 0z'
-              fill='#FFFFFF'
-            />
-            <path
-              d='M172 852V172h680v680H172z m95.2-95.2h490V265.6H267.2v491.2z m61.6-69.6l244.8-361.2 132.4-2.8-252.8 364H328.8z'
-              fill='#FFFFFF'
+              d='M1 1h148v148H1zm21 21v107h107V22zm68 15h27l-56 77H34z'
+              fill='#ffffff'
             />
           </svg>
         </li>
