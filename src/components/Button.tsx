@@ -5,7 +5,7 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   label?: string;
   onClick?: React.MouseEventHandler<HTMLButtonElement> | undefined;
   size?: string;
-  children: ReactNode;
+  children?: ReactNode;
 }
 
 const Button: FC<ButtonProps> = ({

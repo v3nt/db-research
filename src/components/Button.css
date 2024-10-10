@@ -3,7 +3,7 @@
 }
 
 .Button--large {
-  @apply px-5 py-2.5;
+  @apply px-5 py-2.5 text-sm;
 }
 .Button--small {
   @apply px-2 py-1 text-xs;

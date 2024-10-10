@@ -52,14 +52,24 @@ const Card = ({ data, open = true, loading = false }: CardProps) => {
                   })}
               </dd>
               <dt>Currency/currencies</dt>
-              <dd>{data?.population}</dd>
+              <dd>
+                {data?.currencies &&
+                  Object.keys(data.currencies).map((key) => {
+                    return (
+                      <span key={key}>
+                        {data.currencies[key].name}, (
+                        {data.currencies[key].symbol})
+                      </span>
+                    );
+                  })}
+              </dd>
               <dt>Capital</dt>
-              <dd>{data?.population}</dd>
+              <dd>{data?.capital}</dd>
               <dt>UN Member</dt>
-              <dd>{data?.population}</dd>
+              <dd>{data?.unMember && <div>Yes</div>}</dd>
               <dt>Landlocked</dt>
-              <dd>{data?.population}</dd>
-              <dt>maps</dt>
+              <dd>{data?.landlocked && <div>Yes</div>}</dd>
+              <dt className='mb-1'>Maps</dt>
               <dd>
                 {data?.maps &&
                   Object.keys(data.maps).map((key) => {

@@ -26,9 +26,9 @@ export default function Home() {
   // AG GRID
   const pagination = true;
   // sets 10 rows per page (default is 100)
-  const paginationPageSize = 10;
+  const paginationPageSize = 20;
   // allows the user to select the page size from a predefined list of page sizes
-  const paginationPageSizeSelector = [10, 50, 100];
+  const paginationPageSizeSelector = [50, 100];
 
   // states
   const [colDefs, setColDefs] = useState<ColDef[] | undefined>();
@@ -59,8 +59,8 @@ export default function Home() {
   useEffect(() => {
     setColDefs([
       {
-        field: 'Favorite',
-        width: 90,
+        field: '',
+        width: 70,
         cellRenderer: (params) => {
           // TODO: should be a component
           const [isFavorite, setIsFavorite] = useState(
@@ -103,10 +103,9 @@ export default function Home() {
         field: 'name',
         cellRenderer: (params: ValueGetterParams<any, any>) => {
           return (
-            <div className='flex'>
-              {params.data.name.common}
-
-              <div className='ml-auto mr-0'>
+            <div className='grid grid-cols-5'>
+              <div className='col-span-4 pr-2'>{params.data.name.common}</div>
+              <div className='col col-span-1 ml-auto mr-0'>
                 <Button
                   label='VIEW'
                   onClick={() => fetchCountry(params.data.name.common)}
