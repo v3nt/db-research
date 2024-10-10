@@ -7,14 +7,21 @@ Repo is here
 https://github.com/v3nt/db-research (public)
 
 ## Notes about the work
-- built with react (Nextjs)
+- Built with react (Nextjs)
 - Typed
 - I used Tailwind for styling
 - TODOs where improvements could be made with more time
-- I manually created a filter for currencies insread of just using all of AG Grid's features
-- Design is basic and i see as more of a working Wireframe
+- I manually created a filter for currencies instead of just using all of AG Grid's features
+- Design is basic and i see it as more of a working Wireframe
+- Login setup for NextAuth with Google & Github. (Protection disabled for interview but protected paths can be added to `middleware.ts`)
 
+### Protecting a page
 
+Add paths to matcher array in `middleware.ts` -
+```
+// '/*' protects all routes
+export const config = { matcher: ['/dashboard:path*', '/dashboard(.*)', '/*'] };
+```
 
 ## Getting Started if you want to run locally
 
@@ -32,6 +39,12 @@ NEXTAUTH_SECRET=
 ```
 (You will need app IDs & secrets)
 
+## Remote configs for logins
+- https://github.com/settings/developers 
+- https://console.cloud.google.com/apis/credentials/oauthclient/ 
+- https://next-auth.js.org/configuration/options#nextauth_secret
+
+## Running locally
 
 First, run the development server:
 
