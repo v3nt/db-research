@@ -26,16 +26,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang='en'>
+    <html lang='en' className='h-full'>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} mx-6 antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} mx-6 flex min-h-full flex-col antialiased`}
       >
         <NextAuthProvider>
-          <div className='mx-auto w-full max-w-screen-2xl'>
-            <main className=''>{children}</main>
-          </div>
+          <main className='mx-auto h-full w-full max-w-screen-2xl grow'>
+            {children}
+          </main>
         </NextAuthProvider>
-        <footer className='mt-12 border-t-2 py-4 text-sm'>
+        <footer className='mt-12 border-t-2 py-6 text-sm'>
           <p>
             Tech test using{' '}
             <Link href='https://restcountries.com'>

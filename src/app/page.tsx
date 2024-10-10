@@ -18,6 +18,7 @@ import ButtonFavorite from '@/components/ButtonFavorite';
 import useFavorites from './hooks/useFavorites';
 import Card from '@/components/Card';
 import Header from '@/components/Header';
+import Button from '@/components/Button';
 
 export default function Home() {
   const baseUrl = process.env.NEXT_PUBLIC_COUNTRIES_BASE_URL;
@@ -102,13 +103,14 @@ export default function Home() {
         cellRenderer: (params: ValueGetterParams<any, any>) => {
           return (
             <div className='flex'>
-              {params.data.name.common}{' '}
-              <button
-                onClick={() => fetchCountry(params.data.name.common)}
-                className='ml-auto mr-0'
-              >
-                View
-              </button>
+              {params.data.name.common}
+
+              <div className='ml-auto mr-0'>
+                <Button
+                  label='VIEW'
+                  onClick={() => fetchCountry(params.data.name.common)}
+                />
+              </div>
             </div>
           );
         },
@@ -207,7 +209,7 @@ export default function Home() {
           <div className='col-span-1'>clear filters</div>
         </form>
       </div>
-      <div className='grid grid-cols-5 gap-6'>
+      <div className='grid h-full grid-cols-5 gap-6'>
         <div className='col-span-2 xl:col-span-1'>
           {countriesLoading && <div>Loading...</div>}
           {country && <Card data={country} open={true} loading={false} />}
@@ -218,10 +220,7 @@ export default function Home() {
           )}
         </div>
 
-        <div
-          className='ag-theme-quartz ag-theme-quartz-dark col-span-3 xl:col-span-4'
-          style={{ height: 518 }}
-        >
+        <div className='ag-theme-quartz ag-theme-quartz-dark col-span-3 h-full min-h-96 xl:col-span-4'>
           {countriesLoading && <div>Loading...</div>}
 
           <AgGridReact
