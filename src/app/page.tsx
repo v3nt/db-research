@@ -14,7 +14,7 @@ import Input from '@/components/Input';
 import { CountryFields } from './types/countries';
 import useFilters from './hooks/useFilters';
 import InputSelect from '@/components/InputSelect';
-import ButtonFavorite from '@/components/ButtonFavourite';
+import ButtonFavorite from '@/components/ButtonFavorite';
 import useFavorites from './hooks/useFavorites';
 import Card from '@/components/Card';
 import Header from '@/components/Header';
@@ -76,12 +76,13 @@ export default function Home() {
           };
 
           return (
-            <div>
+            <div className='flex h-full'>
               {!isFavorite && (
                 <ButtonFavorite
                   onClick={() => cellHandler('add')}
                   label='Add'
                   icon=''
+                  isFavorite={false}
                 />
               )}
               {isFavorite && (
@@ -89,6 +90,7 @@ export default function Home() {
                   onClick={() => cellHandler(null)}
                   label='Rem'
                   icon=''
+                  isFavorite={true}
                 />
               )}
             </div>
