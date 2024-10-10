@@ -28,7 +28,7 @@ export default function Home() {
   // sets 10 rows per page (default is 100)
   const paginationPageSize = 20;
   // allows the user to select the page size from a predefined list of page sizes
-  const paginationPageSizeSelector = [50, 100];
+  const paginationPageSizeSelector = [20, 50, 100];
 
   // states
   const [colDefs, setColDefs] = useState<ColDef[] | undefined>();
@@ -170,12 +170,10 @@ export default function Home() {
   const handleFilterChange = (value: string) => {
     filterDataByCurrency(value, countries);
   };
-
-  const handleClearFilters = (value: string) => {
+  const handleClearFilters = () => {
     filterDataByCurrency('', countries);
     setSearchTerm('');
   };
-
   const handelShowFavorites = () => {
     setTableData(listMyFavorites(countries));
   };
@@ -214,7 +212,7 @@ export default function Home() {
           <div className='col-span-1 flex items-end'>
             <div className='mb-1'>
               <Button
-                onClick={(e) => handleClearFilters(e)}
+                onClick={(e) => handleClearFilters()}
                 size='large'
                 type='reset'
               >
@@ -234,18 +232,22 @@ export default function Home() {
             </div>
           )}
         </div>
+        <div className='col-span-3 xl:col-span-4'>
+          <div
+            className='ag-theme-quartz ag-theme-quartz-dark'
+            style={{ height: '700px' }}
+          >
+            {countriesLoading && <div>Loading...</div>}
 
-        <div className='ag-theme-quartz ag-theme-quartz-dark col-span-3 h-full min-h-96 xl:col-span-4'>
-          {countriesLoading && <div>Loading...</div>}
-
-          <AgGridReact
-            loading={countriesLoading}
-            pagination={pagination}
-            paginationPageSize={paginationPageSize}
-            paginationPageSizeSelector={paginationPageSizeSelector}
-            rowData={tableData}
-            columnDefs={colDefs}
-          />
+            <AgGridReact
+              loading={countriesLoading}
+              pagination={pagination}
+              paginationPageSize={paginationPageSize}
+              paginationPageSizeSelector={paginationPageSizeSelector}
+              rowData={tableData}
+              columnDefs={colDefs}
+            />
+          </div>
         </div>
       </div>
     </>
