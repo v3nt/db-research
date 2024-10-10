@@ -1,14 +1,29 @@
-import { FC } from 'react';
+import { FC, ReactNode } from 'react';
 import './Button.css';
-interface ButtonProps {
-  label: string;
+
+interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  label?: string;
   onClick?: React.MouseEventHandler<HTMLButtonElement> | undefined;
+  size?: string;
+  children: ReactNode;
 }
 
-const Button: FC<ButtonProps> = ({ label = 'Button', onClick }) => {
+const Button: FC<ButtonProps> = ({
+  label,
+  onClick,
+  size = 'small',
+  children,
+  type = 'button',
+}) => {
   return (
-    <button className='Button' onClick={onClick} aria-label={label}>
-      {label}
+    <button
+      className={`Button Button--${size}`}
+      onClick={onClick}
+      aria-label={label}
+      type={type}
+    >
+      {label && label}
+      {children}
     </button>
   );
 };

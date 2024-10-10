@@ -47,11 +47,12 @@ export default function Home() {
   });
 
   const {
-    searchDataByString,
-    results,
-    searchTerm,
-    handleSearch,
     filterDataByCurrency,
+    handleSearch,
+    results,
+    searchDataByString,
+    searchTerm,
+    setSearchTerm,
   } = useSearch();
 
   // setup table, fetch countries
@@ -147,7 +148,6 @@ export default function Home() {
 
     // on initial render only
     fetchCountries();
-    // fetchCountry('eesti');
     setTableData(countries);
   }, []);
 
@@ -171,6 +171,12 @@ export default function Home() {
   const handleFilterChange = (value: string) => {
     filterDataByCurrency(value, countries);
   };
+
+  const handleClearFilters = (value: string) => {
+    filterDataByCurrency('', countries);
+    setSearchTerm('');
+  };
+
   const handelShowFavorites = () => {
     setTableData(listMyFavorites(countries));
   };
@@ -191,7 +197,7 @@ export default function Home() {
         <form onSubmit={handleSubmit} className='grid grid-cols-5 gap-6'>
           <div className='col-span-2 xl:col-span-1'>
             <Input
-              name='my-input'
+              name='searchByName'
               label='Search'
               onChange={handleSearch}
               placeholder='Search by name'
@@ -206,7 +212,17 @@ export default function Home() {
               onChange={(e) => handleFilterChange(e.currentTarget.value)}
             />
           </div>
-          <div className='col-span-1'>clear filters</div>
+          <div className='col-span-1 flex items-end'>
+            <div className='mb-1'>
+              <Button
+                onClick={(e) => handleClearFilters(e)}
+                size='large'
+                type='reset'
+              >
+                Clear filters
+              </Button>
+            </div>
+          </div>
         </form>
       </div>
       <div className='grid h-full grid-cols-5 gap-6'>

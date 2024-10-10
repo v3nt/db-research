@@ -48,12 +48,13 @@ const useSearch = () => {
   };
 
   return {
+    filterDataByCurrency,
     handleSearch,
     results,
     resultsMessage,
-    filterDataByCurrency,
     searchDataByString,
     searchTerm,
+    setSearchTerm,
   };
 };
 
