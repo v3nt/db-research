@@ -35,7 +35,7 @@ export default function RootLayout({
             {children}
           </main>
         </NextAuthProvider>
-        <footer className='mt-12 max-w-screen-2xl border-t pb-10 pt-6 text-sm'>
+        <footer className='mx-auto mt-12 w-full max-w-screen-2xl border-t pb-10 pt-6 text-sm'>
           <p>
             Tech test using{' '}
             <Link href='https://restcountries.com'>
