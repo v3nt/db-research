@@ -12,8 +12,11 @@ https://github.com/v3nt/db-research (public)
 - I used Tailwind for styling
 - TODOs where improvements could be made with more time
 - I manually created a filter for currencies instead of just using all of AG Grid's features
+- Added AG Grid pagination & sorting
+- https://restcountries.com API does not have pagination built in so all are loaded and paginated in the FE
 - Design is basic and i see it as more of a working Wireframe
 - Login setup for NextAuth with Google & Github. (Protection disabled for interview but protected paths can be added to `middleware.ts`)
+- No testing added. Would use Vitest for unit testing the components
 
 ### Protecting a page
 

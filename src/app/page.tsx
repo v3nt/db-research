@@ -113,7 +113,7 @@ export default function Home() {
           return (
             <div className='grid grid-cols-5'>
               <div className='col-span-4 pr-2'>{params.data.name.common}</div>
-              <div className='col col-span-1 ml-auto mr-0'>
+              <div className='col col-span-1'>
                 <Button
                   label='VIEW'
                   onClick={() => fetchCountry(params.data.name.common)}
@@ -142,7 +142,6 @@ export default function Home() {
         ),
       },
       { field: 'population', width: 120 },
-      { field: 'cca2', width: 80 },
       {
         field: 'currencies',
         valueGetter: (params: any | unknown) => {
