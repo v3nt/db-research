@@ -1,0 +1,26 @@
+.Alert {
+  @apply my-auto rounded-lg bg-primary-700 p-3 text-center font-medium text-white dark:bg-primary-600;
+}
+
+.Alert + .Alert {
+  @apply mt-3;
+}
+
+.info {
+  @apply bg-yellow-600;
+}
+
+.error {
+  @apply bg-red-700;
+}
+
+.positive {
+  @apply bg-green-700;
+}
+
+.Alert--large {
+  @apply px-5 py-2.5 text-sm;
+}
+.Alert--small {
+  @apply px-2 py-1 text-xs;
+}

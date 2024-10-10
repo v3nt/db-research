@@ -19,6 +19,7 @@ import useFavorites from './hooks/useFavorites';
 import Card from '@/components/Card';
 import Header from '@/components/Header';
 import Button from '@/components/Button';
+import Alert from '@/components/Alert';
 
 export default function Home() {
   const baseUrl = process.env.NEXT_PUBLIC_COUNTRIES_BASE_URL;
@@ -37,10 +38,17 @@ export default function Home() {
   // hooks
   const { favorites, addFavorite, removeFavorite, isInArray, listMyFavorites } =
     useFavorites();
-  const { countries, country, fetchCountries, fetchCountry, countriesLoading } =
-    useCountries({
-      baseUrl,
-    });
+  const {
+    countries,
+    countriesLoading,
+    country,
+    errors,
+    countryLoading,
+    fetchCountries,
+    fetchCountry,
+  } = useCountries({
+    baseUrl,
+  });
   const { currencies } = useFilters({
     data: countries,
     updateWithDataChange: false,
@@ -223,24 +231,30 @@ export default function Home() {
         </form>
       </div>
       <div className='grid h-full grid-cols-5 gap-6'>
-        <div className='col-span-2 xl:col-span-1'>
-          {countriesLoading && <div>Loading...</div>}
-          {country && <Card data={country} open={true} loading={false} />}
+        {errors && (
+          <div className='col-span-5'>
+            <Alert type='error'>{errors}</Alert>
+          </div>
+        )}
+
+        <div className='col-span-5 md:col-span-2'>
+          {country && (
+            <Card data={country} open={true} loading={countryLoading} />
+          )}
           {!country && (
             <div>
               <p>Select a country from the table to view its details</p>
             </div>
           )}
         </div>
-        <div className='col-span-3 xl:col-span-4'>
+        <div className='col-span-5 md:col-span-3'>
           <div
             className='ag-theme-quartz ag-theme-quartz-dark'
             style={{ height: '700px' }}
           >
-            {countriesLoading && <div>Loading...</div>}
+            {countriesLoading && <Alert type='info'>Loading...</Alert>}
 
             <AgGridReact
-              loading={countriesLoading}
               pagination={pagination}
               paginationPageSize={paginationPageSize}
               paginationPageSizeSelector={paginationPageSizeSelector}

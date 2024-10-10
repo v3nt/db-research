@@ -14,6 +14,7 @@ const useCountries = ({ baseUrl }: CountryProps) => {
 
   const fetchCountries = async () => {
     setCountriesLoading(true);
+    setErrors('');
     try {
       const dataFields =
         '?fields=name,flags,population,cca2,country,currencies,capital,languages';
@@ -36,6 +37,9 @@ const useCountries = ({ baseUrl }: CountryProps) => {
           'Promise resolved but HTTP status failed',
           response.status
         );
+        setErrors(
+          `Fetch Countries. Promise resolved but HTTP status failed, ${response.status}`
+        );
       }
       setCountriesLoading(false);
     } catch (error) {
@@ -47,9 +51,10 @@ const useCountries = ({ baseUrl }: CountryProps) => {
 
   const fetchCountry = async (id: string) => {
     setCountryLoading(true);
+    setErrors('');
     try {
       const dataFields =
-        '?fields=name,flags,population,cca2,country,currencies,capital,unMember,languages,landlocked,maps';
+        '/?fields=name,flags,population,cca2,country,currencies,capital,unMember,languages,landlocked,maps';
       const all = `${baseUrl}/name/${id}${dataFields}`;
       const response = await fetch(all);
       if (response.ok) {
@@ -60,7 +65,11 @@ const useCountries = ({ baseUrl }: CountryProps) => {
           'Promise resolved but HTTP status failed',
           response.status
         );
+        setErrors(
+          `Fetch Country. Promise resolved but HTTP status failed, ${response.status}`
+        );
       }
+
       setCountryLoading(false);
     } catch (error) {
       setCountryLoading(false);
